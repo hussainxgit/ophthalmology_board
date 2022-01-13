@@ -13,6 +13,7 @@ class AllQuestionsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _dataServices.getAllQuestions();
     return Scaffold(
         body: Obx(() => ListView.builder(
               shrinkWrap: true,

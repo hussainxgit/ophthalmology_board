@@ -37,6 +37,7 @@ class DataServices extends GetxController {
     allQuestion.assignAll(await _apiServices.getAllQuestions());
     allQuestion.refresh();
     return allQuestion;
+
   }
 
   Future<RxList<Quiz>> getAllQuizzes() async {
