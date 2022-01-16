@@ -22,7 +22,7 @@ class DataServices extends GetxController {
   DataServices();
 
   Future<RxList<Operation>> getAllDoctorOperations() async {
-    doctorOperations.assignAll(await _apiServices.getAllOperations());
+    doctorOperations.assignAll(await _apiServices.getAllOperations(doctorUser.value));
     doctorOperations.refresh();
     return doctorOperations;
   }
@@ -59,8 +59,8 @@ class DataServices extends GetxController {
   }
 
   initAppMainData() async {
-    getAllDoctorOperations();
     await isUserSignedIn();
+    getAllDoctorOperations();
     if (doctorUser.value.containsRole('admin')) {
       getAllQuestions();
       getAllQuizzes();
