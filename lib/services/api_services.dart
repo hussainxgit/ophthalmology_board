@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:ophthalmology_board/models/Lecture.dart';
+import 'package:ophthalmology_board/models/Resident.dart';
 import 'package:ophthalmology_board/models/data_response.dart';
 import 'package:ophthalmology_board/models/doctor_user.dart';
 import 'package:ophthalmology_board/models/operation.dart';
@@ -21,12 +24,23 @@ class ApiServices {
   final CollectionReference _doctorUsersCollection =
       FirebaseFirestore.instance.collection('doctor_users');
 
+  final CollectionReference _residentsCollection =
+      FirebaseFirestore.instance.collection('residents');
+
+  final CollectionReference _lecturesCollection =
+      FirebaseFirestore.instance.collection('lectures');
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final DataResponse _dataResponse = DataResponse();
 
   Future addOperationLog(Operation operation) async {
     return await _operationsLogCollection.doc().set(operation.toFirebaseMap());
+  }
+
+  Future editOperationLog(Operation operation) async {
+    print(operation.uid);
+    return await _operationsLogCollection.doc(operation.uid).update(operation.toFirebaseMap());
   }
 
   Future<Operation> getOperation(String operationUid) async {
@@ -41,7 +55,9 @@ class ApiServices {
         (collection) => collection.docs
             .map((document) => Operation.fromFirebaseMap(
                 document.data() as Map<String, dynamic>, document.id))
-            .toList().where((e) => e.doctorUser?.email == doctor.email).toList());
+            .toList()
+            .where((e) => e.doctorUser?.email == doctor.email)
+            .toList());
 
     operations.sort((a, b) {
       return b.operationDate!.compareTo(a.operationDate!);
@@ -175,7 +191,8 @@ class ApiServices {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      _dataResponse.setSuccess('User signed in successfully', await getDoctorUserInfo(userCredential.user!.uid));
+      _dataResponse.setSuccess('User signed in successfully',
+          await getDoctorUserInfo(userCredential.user!.uid));
     } on FirebaseAuthException catch (e) {
       _dataResponse.setError(e.code);
     }
@@ -189,8 +206,9 @@ class ApiServices {
             email: user.email!,
             password: password,
           )
-          .then((value) async =>
-              await _doctorUsersCollection.doc(value.user!.uid).set(user.toMap()));
+          .then((value) async => await _doctorUsersCollection
+              .doc(value.user!.uid)
+              .set(user.toMap()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -212,7 +230,9 @@ class ApiServices {
 
   Future<DataResponse> userForgotPassword(String email) async {
     try {
-      await _auth.sendPasswordResetEmail(email: email).whenComplete(() => _dataResponse.setSuccess('Email sent.'));
+      await _auth
+          .sendPasswordResetEmail(email: email)
+          .whenComplete(() => _dataResponse.setSuccess('Email sent.'));
     } on FirebaseAuthException catch (e) {
       print(e.code);
       _dataResponse.setError(e.code);
@@ -225,105 +245,124 @@ class ApiServices {
         DoctorUser.fromMap(value.data() as Map<String, dynamic>, value.id));
   }
 
-//
-// // get today lecture
-// Future<Lecture> getTodayLecture() async {
-//   DateTime dateToday =
-//   DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-//   QuerySnapshot<Map<String, dynamic>> query =
-//   await _lecturesCollection.where('date', isEqualTo: dateToday).get();
-//   //check if there is lecture or not
-//   if (query.size <= 0) {
-//     return null;
-//   }
-//   return Lecture.fromFirebase(query.docs.first.data(), query.docs.first.id);
-// }
-//
-// Future<bool> attendResident(Lecture lecture, Resident resident) async {
-//   List<Map<String, dynamic>> lectureAttendees =
-//   await getLecture(lecture.id).then((value) => value.residents);
-//   if (lectureAttendees.contains(resident.id)) {
-//     return false;
-//   } else {
-//     String _now = DateFormat('hh:mm a').format(DateTime.now());
-//     lectureAttendees.add({'name': resident.name, 'time': '$_now'});
-//     return await _lecturesCollection
-//         .doc(lecture.id)
-//         .update({'residents': lectureAttendees}).then((value) => true);
-//   }
-// }
-//
-// Future<bool> absentResident(Lecture lecture, Resident resident) async {
-//   List<Map<String, dynamic>> lectureAttendees =
-//   await getLecture(lecture.id).then((value) => value.residents);
-//
-//   lectureAttendees.removeWhere((item) => item['name'] == resident.name);
-//
-//   return await _lecturesCollection
-//       .doc(lecture.id)
-//       .update({'residents': lectureAttendees}).then((value) => true);
-// }
-//
-// Future<bool> excusedAbsenceResident(
-//     Lecture lecture, Resident resident, String reason) async {
-//   List<Map<String, dynamic>> excusedAbsence = lecture.excusedAbsence;
-//   excusedAbsence.removeWhere((e) => e['name'] == resident.name);
-//   excusedAbsence.add({'name': resident.name, 'reason': reason});
-//
-//   return await _lecturesCollection
-//       .doc(lecture.id)
-//       .update({'excusedAbsence': excusedAbsence}).then((value) => true);
-// }
-//
-// Future<bool> removeExcusedAbsenceResident(
-//     Lecture lecture, Resident resident, String reason) async {
-//   List<Map<String, dynamic>> excusedAbsence = lecture.excusedAbsence;
-//   excusedAbsence.removeWhere((e) => e['name'] == resident.name);
-//   return await _lecturesCollection
-//       .doc(lecture.id)
-//       .update({'excusedAbsence': excusedAbsence}).then((value) => true);
-// }
-//
-// Future addResident(Resident resident) async {
-//   return await _residentsCollection.doc().set(resident.toFirebaseMap());
-// }
-//
-// Future<List<Resident>> getAllResidents() async {
-//   List<Resident> residents = await _residentsCollection.get().then(
-//           (collection) => collection.docs
-//           .map((document) =>
-//           Resident.fromFirebase(document.data(), document.id))
-//           .toList());
-//
-//   residents.sort((a, b) {
-//     return a.name
-//         .toString()
-//         .toLowerCase()
-//         .compareTo(b.name.toString().toLowerCase());
-//   });
-//
-//   return residents;
-// }
-//
-// Future<bool> editResident(Resident resident) async {
-//   return await _residentsCollection
-//       .doc(resident.id)
-//       .update(resident.toFirebaseMap())
-//       .then((value) => true);
-// }
-//
-// Future<bool> editLecture(Lecture lecture) async {
-//   return await _lecturesCollection
-//       .doc(lecture.id)
-//       .update(lecture.toFirebaseMap())
-//       .then((value) => true);
-// }
-//
-// Future<bool> deleteLecture(Lecture lecture) async {
-//   return await _lecturesCollection
-//       .doc(lecture.id)
-//       .delete()
-//       .then((value) => true);
-// }
+  Future addLecture(Lecture lecture) async {
+    return await _lecturesCollection.doc().set(lecture.toMap());
+  }
 
+  // get lecture by uid
+  Future<Lecture> getLecture(String lectureUid) async {
+    return await _lecturesCollection.doc(lectureUid).get().then((document) =>
+        Lecture.fromFirebase(
+            document.data() as Map<String, dynamic>, document.id));
+  }
+
+  // get all lectures
+  Future<List<Lecture>> getAllLectures() async {
+    List<Lecture> lectures = await _lecturesCollection.get().then(
+        (collection) => collection.docs
+            .map((document) => Lecture.fromFirebase(
+                document.data() as Map<String, dynamic>, document.id))
+            .toList());
+    print(lectures.length);
+    lectures.sort((a, b) {
+      return b.date!.compareTo(a.date!);
+    });
+    return lectures;
+  }
+
+  // get today lecture
+  Future<Lecture> getTodayLecture() async {
+    DateTime dateToday =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    QuerySnapshot<Object?> query =
+        await _lecturesCollection.where('date', isEqualTo: dateToday).get();
+    return Lecture.fromFirebase(
+        query.docs.first.data() as Map<String, dynamic>, query.docs.first.id);
+  }
+
+  Future<bool> attendResident(Lecture lecture, Resident resident) async {
+    List<Map<String, dynamic>> lectureAttendees =
+        await getLecture(lecture.id!).then((value) => value.residents!);
+    if (lectureAttendees.contains(resident.id)) {
+      return false;
+    } else {
+      String _now = DateFormat('hh:mm a').format(DateTime.now());
+      lectureAttendees.add({'name': resident.name, 'time': _now});
+      return await _lecturesCollection
+          .doc(lecture.id)
+          .update({'residents': lectureAttendees}).then((value) => true);
+    }
+  }
+
+  Future<bool> absentResident(Lecture lecture, Resident resident) async {
+    List<Map<String, dynamic>> lectureAttendees =
+        await getLecture(lecture.id!).then((value) => value.residents!);
+
+    lectureAttendees.removeWhere((item) => item['name'] == resident.name);
+
+    return await _lecturesCollection
+        .doc(lecture.id)
+        .update({'residents': lectureAttendees}).then((value) => true);
+  }
+
+  Future<bool> excusedAbsenceResident(
+      Lecture lecture, Resident resident, String reason) async {
+    List<Map<String, dynamic>> excusedAbsence = lecture.excusedAbsence!;
+    excusedAbsence.removeWhere((e) => e['name'] == resident.name);
+    excusedAbsence.add({'name': resident.name, 'reason': reason});
+
+    return await _lecturesCollection
+        .doc(lecture.id)
+        .update({'excusedAbsence': excusedAbsence}).then((value) => true);
+  }
+
+  Future<bool> removeExcusedAbsenceResident(
+      Lecture lecture, Resident resident, String reason) async {
+    List<Map<String, dynamic>> excusedAbsence = lecture.excusedAbsence!;
+    excusedAbsence.removeWhere((e) => e['name'] == resident.name);
+    return await _lecturesCollection
+        .doc(lecture.id)
+        .update({'excusedAbsence': excusedAbsence}).then((value) => true);
+  }
+
+  Future addResident(Resident resident) async {
+    return await _residentsCollection.doc().set(resident.toFirebaseMap());
+  }
+
+  Future<List<DoctorUser>> getAllUsers() async {
+    List<DoctorUser> residents = await _doctorUsersCollection.get().then(
+        (collection) => collection.docs
+            .map((document) => DoctorUser.fromMap(
+                document.data() as Map<String, dynamic>, document.id))
+            .toList());
+    residents.sort((a, b) {
+      return a.name
+          .toString()
+          .toLowerCase()
+          .compareTo(b.name.toString().toLowerCase());
+    });
+
+    return residents;
+  }
+
+  Future<bool> editResident(Resident resident) async {
+    return await _residentsCollection
+        .doc(resident.id)
+        .update(resident.toFirebaseMap())
+        .then((value) => true);
+  }
+
+  Future<bool> editLecture(Lecture lecture) async {
+    return await _lecturesCollection
+        .doc(lecture.id)
+        .update(lecture.toFirebaseMap())
+        .then((value) => true);
+  }
+
+  Future<bool> deleteLecture(Lecture lecture) async {
+    return await _lecturesCollection
+        .doc(lecture.id)
+        .delete()
+        .then((value) => true);
+  }
 }

@@ -30,9 +30,9 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.17.0
-  firebase_core: ^1.10.6
-  firebase_auth: ^3.3.4
-  cloud_firestore: ^3.1.5
+  firebase_core: ^1.12.0
+  firebase_auth: ^3.3.6
+  cloud_firestore: ^3.1.7
   get: ^4.6.1
   avatar_glow: ^2.0.2
   timer_count_down: ^2.2.1
@@ -66,6 +66,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - graphics/
+    - graphics/emoji_gif_100px/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

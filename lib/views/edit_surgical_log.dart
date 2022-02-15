@@ -8,15 +8,20 @@ import 'package:ophthalmology_board/services/data_services.dart';
 import 'package:ophthalmology_board/widgets/custom_app_bar.dart';
 import 'package:ophthalmology_board/services/api_services.dart';
 
-class AddSurgicalLog extends StatefulWidget {
-  const AddSurgicalLog({Key? key}) : super(key: key);
+class EditSurgicalLog extends StatefulWidget {
+  final Operation operation;
+
+  const EditSurgicalLog({Key? key, required this.operation}) : super(key: key);
 
   @override
-  State<AddSurgicalLog> createState() => _AddSurgicalLogState();
+  State<EditSurgicalLog> createState() => _EditSurgicalLogState();
 }
 
-class _AddSurgicalLogState extends State<AddSurgicalLog> {
+class _EditSurgicalLogState extends State<EditSurgicalLog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final DataServices _dataServices = Get.find();
+  final ApiServices _apiServices = ApiServices();
+  DateTime selectedDate = DateTime.now();
   TextEditingController dateCtl = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController fileNumberController = TextEditingController();
@@ -26,9 +31,6 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
   TextEditingController postOpLtController = TextEditingController();
   TextEditingController postOpRtController = TextEditingController();
   TextEditingController complicationsController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
-  final DataServices _dataServices = Get.find();
-  final ApiServices _apiServices = ApiServices();
 
   Future<DateTime?> showDate(BuildContext context) async {
     return await showDatePicker(
@@ -45,12 +47,13 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
       appBar: CustomAppBar(
         actionList: [
           IconButton(
-            icon: const Icon(Icons.save),
-            tooltip: 'Send',
+            icon: const Icon(Icons.edit),
+            tooltip: 'Edit',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _apiServices
-                    .addOperationLog(Operation(
+                    .editOperationLog(Operation(
+                        uid: widget.operation.uid,
                         patientName: nameController.value.text,
                         patientFileNumber: fileNumberController.value.text,
                         procedure: procedureController.value.text,
@@ -60,10 +63,7 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
                         postOpRightEye: postOpRtController.value.text,
                         complications: complicationsController.value.text,
                         operationDate: selectedDate,
-                        doctorUser: DoctorUser(
-                            name: 'Hussain SK',
-                            email: 'robinx5.q8@gmail.com',
-                            phone: '62228494')))
+                        doctorUser: _dataServices.doctorUser.value))
                     .whenComplete(() => _dataServices.initAppMainData())
                     .whenComplete(() => Get.back());
               }
@@ -270,5 +270,35 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedDate = widget.operation.operationDate!;
+    dateCtl.text = widget.operation.operationDate.toString();
+    nameController.text = widget.operation.patientName!;
+    fileNumberController.text = widget.operation.patientFileNumber!;
+    procedureController.text = widget.operation.procedure!;
+    leftEyeController.text = widget.operation.leftEye!;
+    rightEyeController.text = widget.operation.rightEye!;
+    postOpRtController.text = widget.operation.postOpRightEye!;
+    postOpLtController.text = widget.operation.postOpLeftEye!;
+    complicationsController.text = widget.operation.complications!;
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    dateCtl.dispose();
+    nameController.dispose();
+    fileNumberController.dispose();
+    procedureController.dispose();
+    leftEyeController.dispose();
+    rightEyeController.dispose();
+    postOpRtController.dispose();
+    complicationsController.dispose();
   }
 }

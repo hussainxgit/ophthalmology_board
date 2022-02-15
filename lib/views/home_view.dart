@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
+import 'package:ophthalmology_board/views/all_users_view.dart';
 import 'package:ophthalmology_board/views/quizzes_questions/add_quiz.dart';
 import 'package:ophthalmology_board/views/quizzes_questions/all_questions_view.dart';
 import 'package:ophthalmology_board/views/quizzes_questions/all_quizzes_view.dart';
@@ -46,6 +47,7 @@ class _HomeViewState extends State<HomeView> {
               },
             )
           : const SizedBox(),
+      const SizedBox(),
     ];
   }
 
@@ -152,6 +154,22 @@ class _HomeViewState extends State<HomeView> {
                   });
                 },
               ),
+              _dataServices.doctorUser.value.containsRole('admin')
+                  ? ListTile(
+                leading: const Icon(Icons.book),
+                title: const Text("All users"),
+                selected: _selectedDestination == 4,
+                onTap: () {
+                  selectDestination(4);
+                  Navigator.pop(context);
+                  Future.delayed(const Duration(milliseconds: 400), () {
+                    setState(() {
+                      _pageController.jumpToPage(4);
+                    });
+                  });
+                },
+              )
+                  : const SizedBox(),
               const Divider(
                 height: 1,
                 thickness: 1,
@@ -162,7 +180,7 @@ class _HomeViewState extends State<HomeView> {
                   child: ListTile(
                     leading: const Icon(Icons.logout),
                     title: const Text('Sign out'),
-                    selected: _selectedDestination == 4,
+                    selected: _selectedDestination == 6,
                     onTap: () {
                       _dataServices.logoutUser();
                     },
@@ -225,7 +243,8 @@ class _HomeViewState extends State<HomeView> {
             ),
             const AllOperativeLogsView(),
             AllQuestionsView(),
-            QuizzesListViewController()
+            QuizzesListViewController(),
+            const AllUsersView()
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:get/instance_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:ophthalmology_board/models/operation.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
+import 'package:ophthalmology_board/views/edit_surgical_log.dart';
 
 class OperativeLogsList extends StatelessWidget {
   OperativeLogsList({Key? key}) : super(key: key);
@@ -36,7 +37,9 @@ class OperativeLogsList extends StatelessWidget {
             operation.procedure!,
           ),
           trailing: const Icon(Icons.keyboard_arrow_right, size: 30.0),
-          onTap: () {},
+          onTap: () {
+            Get.to(()=> EditSurgicalLog(operation: operation));
+          },
         );
       },
     ));

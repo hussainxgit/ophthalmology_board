@@ -18,11 +18,13 @@ class DataServices extends GetxController {
   RxList<Question> quizQuestions = <Question>[].obs;
   RxList<DoctorUser> quizParticipants = <DoctorUser>[].obs;
   RxList<QuizResult> quizResults = <QuizResult>[].obs;
+  RxList<DoctorUser> allUsers = <DoctorUser>[].obs;
 
   DataServices();
 
   Future<RxList<Operation>> getAllDoctorOperations() async {
-    doctorOperations.assignAll(await _apiServices.getAllOperations(doctorUser.value));
+    doctorOperations
+        .assignAll(await _apiServices.getAllOperations(doctorUser.value));
     doctorOperations.refresh();
     return doctorOperations;
   }
@@ -37,7 +39,6 @@ class DataServices extends GetxController {
     allQuestion.assignAll(await _apiServices.getAllQuestions());
     allQuestion.refresh();
     return allQuestion;
-
   }
 
   Future<RxList<Quiz>> getAllQuizzes() async {
@@ -46,14 +47,18 @@ class DataServices extends GetxController {
     return allQuizzes;
   }
 
-  Future<RxList<Quiz>> getResidentsUncompletedQuizzes(DoctorUser doctorUser) async {
-    allQuizzes.assignAll(await _apiServices.getResidentUncompletedQuizzes(doctorUser));
+  Future<RxList<Quiz>> getResidentsUncompletedQuizzes(
+      DoctorUser doctorUser) async {
+    allQuizzes.assignAll(
+        await _apiServices.getResidentUncompletedQuizzes(doctorUser));
     allQuizzes.refresh();
     return allQuizzes;
   }
 
-  Future<RxList<Quiz>> getResidentsCompletedQuizzes(DoctorUser doctorUser) async {
-    allQuizzes.assignAll(await _apiServices.getResidentUncompletedQuizzes(doctorUser));
+  Future<RxList<Quiz>> getResidentsCompletedQuizzes(
+      DoctorUser doctorUser) async {
+    allQuizzes.assignAll(
+        await _apiServices.getResidentUncompletedQuizzes(doctorUser));
     allQuizzes.refresh();
     return allQuizzes;
   }
@@ -64,6 +69,7 @@ class DataServices extends GetxController {
     if (doctorUser.value.containsRole('admin')) {
       getAllQuestions();
       getAllQuizzes();
+      getAllUsers();
     } else if (doctorUser.value.containsRole('resident') &&
         doctorUser.value.containsRole('admin') != true) {
       getResidentsUncompletedQuizzes(doctorUser.value);
@@ -153,6 +159,10 @@ class DataServices extends GetxController {
     }
     quizResults.refresh();
     quizParticipants.refresh();
+  }
+
+  Future<void> getAllUsers() async {
+    allUsers.value = await _apiServices.getAllUsers();
   }
 
   Future<bool> isUserSignedIn() async {
