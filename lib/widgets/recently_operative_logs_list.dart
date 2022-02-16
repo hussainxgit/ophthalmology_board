@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
+import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:ophthalmology_board/models/operation.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
+
+import '../views/edit_surgical_log.dart';
 
 class RecentlyOperativeLogsList extends StatelessWidget {
   RecentlyOperativeLogsList({Key? key}) : super(key: key);
@@ -36,7 +39,9 @@ class RecentlyOperativeLogsList extends StatelessWidget {
             operation.procedure!,
           ),
           trailing: const Icon(Icons.keyboard_arrow_right, size: 30.0),
-          onTap: () {},
+          onTap: () {
+            Get.to(()=> EditSurgicalLog(operation: operation));
+          },
         );
       },
     ));

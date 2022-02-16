@@ -86,10 +86,6 @@ class _EditSurgicalLogState extends State<EditSurgicalLog> {
                           fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
-                      height: 8.0,
-                    ),
-                    const Text('Note. please type full name of the patient'),
-                    const SizedBox(
                       height: 20.0,
                     ),
                     TextFormField(
@@ -131,7 +127,6 @@ class _EditSurgicalLogState extends State<EditSurgicalLog> {
                     const SizedBox(
                       height: 8.0,
                     ),
-                    const Text('Note. You can add post OP later'),
                     const SizedBox(
                       height: 20.0,
                     ),
@@ -176,24 +171,6 @@ class _EditSurgicalLogState extends State<EditSurgicalLog> {
                       children: [
                         Flexible(
                           child: TextFormField(
-                            controller: leftEyeController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Left eye vision is required';
-                              }
-                            },
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                label: Text('Left eye'),
-                                prefixText: '20 / '),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 16.0,
-                        ),
-                        Flexible(
-                          child: TextFormField(
                             controller: rightEyeController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -204,6 +181,24 @@ class _EditSurgicalLogState extends State<EditSurgicalLog> {
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 label: Text('Right eye'),
+                                prefixText: '20 / '),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16.0,
+                        ),
+                        Flexible(
+                          child: TextFormField(
+                            controller: leftEyeController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Left eye vision is required';
+                              }
+                            },
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                label: Text('Left eye'),
                                 prefixText: '20 / '),
                           ),
                         ),
@@ -229,11 +224,11 @@ class _EditSurgicalLogState extends State<EditSurgicalLog> {
                       children: [
                         Flexible(
                           child: TextFormField(
-                            controller: postOpLtController,
+                            controller: postOpRtController,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                label: Text('Left eye'),
+                                label: Text('Right eye'),
                                 prefixText: '20 / '),
                           ),
                         ),
@@ -242,11 +237,11 @@ class _EditSurgicalLogState extends State<EditSurgicalLog> {
                         ),
                         Flexible(
                           child: TextFormField(
-                            controller: postOpRtController,
+                            controller: postOpLtController,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                label: Text('Right eye'),
+                                label: Text('Left eye'),
                                 prefixText: '20 / '),
                           ),
                         ),

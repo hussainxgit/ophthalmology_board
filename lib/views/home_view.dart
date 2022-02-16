@@ -207,7 +207,7 @@ class _HomeViewState extends State<HomeView> {
               padding: const EdgeInsets.all(16.0),
               child: ListView(
                 children: [
-                  const OperativeLogHeader(),
+                  OperativeLogHeader(),
                   const Divider(
                     thickness: 1,
                   ),

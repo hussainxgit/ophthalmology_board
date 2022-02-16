@@ -8,6 +8,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.black87,
       title: Text(title ?? ''),
       actions: actionList != null ? actionList!.map((e) => e).toList() : [],
     );
