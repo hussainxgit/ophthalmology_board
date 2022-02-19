@@ -10,8 +10,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     const color = Colors.white;
@@ -34,7 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       elevation: 8.0,
                       shape: const CircleBorder(),
                       child: CircleAvatar(
-                        child: Image.asset('graphics/iris_logo_and_wordmark.png'),
+                        child:
+                            Image.asset('graphics/iris_logo_and_wordmark.png'),
                         radius: 50.0,
                       )),
                   const SizedBox(
@@ -43,11 +42,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   const Text(
                     "Kuwait Ophthalmology Board",
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 23.0, color: color),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 23.0,
+                        color: color),
                   ),
                 ],
               ),
-
               const SizedBox(
                 height: 30.0,
               ),

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:ophthalmology_board/services/api_services.dart';
@@ -17,6 +16,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final TextEditingController _email = TextEditingController();
 
   String? _emailError;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -78,59 +78,53 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           ),
                         ),
                         const SizedBox(
-                          height: 16,
-                        ),
-                        const SizedBox(
-                          height: 30,
+                          height: 46,
                         ),
                         SizedBox(
                           height: 50,
                           width: double.infinity,
-                          child: FlatButton(
-                            onPressed: () {},
-                            padding: const EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
+                          child: ElevatedButton(
+                            onPressed: (isLoading) ? null : () => submit(),
+                            style: ButtonStyle(
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      const EdgeInsets.all(0)),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              )),
                             ),
-                            child: InkWell(
-                              onTap: () {
-                                _apiServices
-                                    .userForgotPassword(_email.text)
-                                    .then((value) {
-                                  if (value.onError) {
-                                    print('wrong email');
-                                    setState(() {
-                                      _emailError = "Couldn't find your email";
-                                    });
-                                  } else if (value.onSuccess) {
-                                    print(value.successMessage);
-                                  }
-                                });
-                              },
-                              child: Ink(
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: [
-                                      Colors.lightBlue,
-                                      Colors.blueAccent
-                                    ],
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: [
+                                    Colors.lightBlue,
+                                    Colors.blueAccent
+                                  ],
                                 ),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  constraints: const BoxConstraints(
-                                      minHeight: 50, maxWidth: double.infinity),
-                                  child: const Text(
-                                    "Forgot Password",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Container(
+                                alignment: Alignment.center,
+                                constraints: const BoxConstraints(
+                                    minHeight: 50, maxWidth: double.infinity),
+                                child: (isLoading)
+                                    ? const SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 1.5,
+                                        ))
+                                    : const Text(
+                                        "Forgot Password",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                        textAlign: TextAlign.center,
+                                      ),
                               ),
                             ),
                           ),
@@ -167,5 +161,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             )),
       ),
     );
+  }
+
+  submit() {
+    _apiServices.userForgotPassword(_email.text).then((value) {
+      if (value.onError) {
+        print('wrong email');
+        setState(() {
+          _emailError = "Couldn't find your email";
+        });
+      } else if (value.onSuccess) {
+        print(value.successMessage);
+      }
+    });
   }
 }

@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
 import 'package:ophthalmology_board/views/auth/forgot_password.dart';
 import 'package:ophthalmology_board/views/auth/sign_up_view.dart';
+import 'package:ophthalmology_board/widgets/custom_dialogs.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -23,6 +23,8 @@ class _LoginViewState extends State<LoginView> {
   String? _emailError;
 
   String? _passwordError;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +115,7 @@ class _LoginViewState extends State<LoginView> {
                           alignment: Alignment.topRight,
                           child: GestureDetector(
                             onTap: () {
-                              Get.to(() => ForgotPassword());
+                              Get.to(() => const ForgotPassword());
                             },
                             child: const Text(
                               "Forgot Password ?",
@@ -128,36 +130,16 @@ class _LoginViewState extends State<LoginView> {
                         SizedBox(
                           height: 50,
                           width: double.infinity,
-                          child: FlatButton(
-                            onPressed: () {
-                              setState(() {
-                                _emailError = null;
-                                _passwordError = null;
-                              });
-                              _dataServices
-                                  .signInUser(_email.text, _password.text)
-                                  .then((value) {
-                                    if(value.onError){
-                                      if(value.errorMessage == 'user-not-found'){
-                                        print('wrong email');
-                                        setState(() {
-                                          _emailError = "Couldn't find your email";
-                                        });
-                                      }else if(value.errorMessage == 'wrong-password'){
-                                        print('wrong password');
-                                        setState(() {
-                                          _passwordError = "Wrong password. Try again or click Forgot password to reset it.";
-                                        });
-                                      }
-                                    }
-                                    if(value.onSuccess){
-                                      Get.back();
-                                    }
-                              });
-                            },
-                            padding: const EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
+                          child: ElevatedButton(
+                            onPressed: (isLoading) ? null : () => submit(),
+                            style: ButtonStyle(
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      const EdgeInsets.all(0)),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              )),
                             ),
                             child: Ink(
                               decoration: BoxDecoration(
@@ -172,7 +154,15 @@ class _LoginViewState extends State<LoginView> {
                                 alignment: Alignment.center,
                                 constraints: const BoxConstraints(
                                     minHeight: 50, maxWidth: double.infinity),
-                                child: const Text(
+                                child: (isLoading)
+                                    ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 1.5,
+                                    ))
+                                    : const Text(
                                   "Sign in",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -217,5 +207,43 @@ class _LoginViewState extends State<LoginView> {
             )),
       ),
     );
+  }
+
+  submit() async {
+    setState(() {
+      isLoading = true;
+    });
+    _dataServices
+        .signInUser(_email.text, _password.text)
+        .then((value) {
+      setState(() {
+        if (value.onError &&
+            value.errorCode == 'user-not-found') {
+          _emailError =
+          "We couldn't find this email, Please check your email.";
+        }
+        if (value.onError &&
+            value.errorCode == 'invalid-email') {
+          _emailError =
+          "Invalid email, Please check your email.";
+        }
+        if (value.onError &&
+            value.errorCode == 'user-disabled') {
+          _emailError =
+          "Your account has been disabled, Please contact Mr.Hussain.";
+        }
+        if (value.onError &&
+            value.errorCode == 'wrong-password') {
+          _passwordError =
+          "Wrong password, if you don't remembering it you can rest it.";
+        }
+      });
+      setState(() {
+        isLoading = false;
+      });
+      if (value.onSuccess) {
+        Get.back();
+      }
+    });
   }
 }

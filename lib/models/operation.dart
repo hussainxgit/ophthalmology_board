@@ -55,7 +55,7 @@ class Operation {
       postOpRightEye: map['postOpRightEye'] as String,
       complications: map['complications'] as String,
       operationDate: (map['operationDate'] as Timestamp).toDate(),
-      doctorUser: DoctorUser.fromMap(map['doctorUser']) ,
+      doctorUser: DoctorUser.fromMap(map['doctorUser']),
     );
   }
 }

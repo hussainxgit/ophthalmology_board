@@ -4,9 +4,9 @@ import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:ophthalmology_board/models/doctor_user.dart';
 import 'package:ophthalmology_board/models/operation.dart';
+import 'package:ophthalmology_board/services/api_services.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
 import 'package:ophthalmology_board/widgets/custom_app_bar.dart';
-import 'package:ophthalmology_board/services/api_services.dart';
 
 class AddSurgicalLog extends StatefulWidget {
   const AddSurgicalLog({Key? key}) : super(key: key);
@@ -98,6 +98,7 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
                         if (value == null || value.isEmpty) {
                           return 'File number is required';
                         }
+                        return null;
                       },
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -114,6 +115,7 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
                         if (value == null || value.isEmpty) {
                           return 'Patient name is required';
                         }
+                        return null;
                       },
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -140,6 +142,7 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
                         if (value == null || value.isEmpty) {
                           return 'Date is required';
                         }
+                        return null;
                       },
                       readOnly: true,
                       controller: dateCtl,
@@ -162,6 +165,7 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
                         if (value == null || value.isEmpty) {
                           return 'Procedure is required';
                         }
+                        return null;
                       },
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -181,6 +185,7 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
                               if (value == null || value.isEmpty) {
                                 return 'Left eye vision is required';
                               }
+                              return null;
                             },
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
@@ -199,6 +204,7 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
                               if (value == null || value.isEmpty) {
                                 return 'Right eye vision is required';
                               }
+                              return null;
                             },
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(

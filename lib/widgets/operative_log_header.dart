@@ -10,7 +10,6 @@ class OperativeLogHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,9 +31,9 @@ class OperativeLogHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Obx(() => Text(
-              _dataServices.doctorOperations.length.toString(),
-              style: Theme.of(context).textTheme.headline1,
-            )),
+                  _dataServices.doctorOperations.length.toString(),
+                  style: Theme.of(context).textTheme.headline1,
+                )),
             Image.network(
                 'https://cdn-icons-png.flaticon.com/512/3034/3034882.png',
                 width: 120)
@@ -53,9 +52,10 @@ class OperativeLogHeader extends StatelessWidget {
                   width: 8.0,
                 ),
                 Obx(() => Text(
-                  _dataServices.doctorOperations.length.toString()+' successful',
-                  style: Theme.of(context).textTheme.subtitle2,
-                )),
+                      _dataServices.doctorOperations.length.toString() +
+                          ' successful',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    )),
               ],
             ),
             Row(

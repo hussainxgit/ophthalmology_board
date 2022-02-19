@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:ophthalmology_board/models/quiz.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
 import 'package:ophthalmology_board/widgets/custom_app_bar.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 
 class AddQuestion extends StatefulWidget {
   const AddQuestion({Key? key}) : super(key: key);
@@ -14,7 +13,6 @@ class AddQuestion extends StatefulWidget {
 }
 
 class _AddQuestionState extends State<AddQuestion> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController dateCtl = TextEditingController();
@@ -24,6 +22,7 @@ class _AddQuestionState extends State<AddQuestion> {
   DateTime selectedDate = DateTime.now();
   List<int> answers = [];
   final DataServices _dataServices = Get.find();
+
   Future<DateTime?> showDate(BuildContext context) async {
     return await showDatePicker(
             context: context,
@@ -32,7 +31,9 @@ class _AddQuestionState extends State<AddQuestion> {
             lastDate: DateTime(2100)) ??
         selectedDate;
   }
+
   Question question = Question();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,17 +44,19 @@ class _AddQuestionState extends State<AddQuestion> {
             tooltip: 'Send',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                if(answers.isEmpty){
-                  return ;
-                }else if (questionChoices.isEmpty) {
-                  return ;
+                if (answers.isEmpty) {
+                  return;
+                } else if (questionChoices.isEmpty) {
+                  return;
                 }
                 question.creator = 'aseel';
                 question.question = questionController.text;
                 question.choices = questionChoices;
                 question.answer = answers;
                 question.creationDate = selectedDate;
-                _dataServices.addQuestion(question).whenComplete(() => Get.back());
+                _dataServices
+                    .addQuestion(question)
+                    .whenComplete(() => Get.back());
               }
             },
           ),
@@ -86,6 +89,7 @@ class _AddQuestionState extends State<AddQuestion> {
                         if (value == null || value.isEmpty) {
                           return 'Write your question';
                         }
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: "Write Question",
@@ -115,10 +119,10 @@ class _AddQuestionState extends State<AddQuestion> {
                     TextFormField(
                       onEditingComplete: () {
                         setState(() {
-                          if(choicesController.text.isNotEmpty){
+                          if (choicesController.text.isNotEmpty) {
                             questionChoices.addAll({
                               (questionChoices.length.toString()):
-                              choicesController.text
+                                  choicesController.text
                             });
                           }
                         });
@@ -191,8 +195,11 @@ class _AddQuestionState extends State<AddQuestion> {
                                         });
                                         questionChoices.clear();
                                         questionChoices.addAll(tempChoicesMap);
-                                        if(answers.isNotEmpty){
-                                          answers.remove(answers.where((element) => element == (index + 1)).single);
+                                        if (answers.isNotEmpty) {
+                                          answers.remove(answers
+                                              .where((element) =>
+                                                  element == (index + 1))
+                                              .single);
                                         }
                                       });
                                     },

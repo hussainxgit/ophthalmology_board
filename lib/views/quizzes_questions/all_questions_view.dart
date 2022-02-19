@@ -44,7 +44,7 @@ class AllQuestionsView extends StatelessWidget {
                   onTap: () {
                     Get.to(() => QuestionView(
                           question: question,
-                    ));
+                        ));
                   },
                 );
               },

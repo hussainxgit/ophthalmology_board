@@ -3,13 +3,14 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
 import 'package:ophthalmology_board/views/all_users_view.dart';
+import 'package:ophthalmology_board/views/quizzes_questions/add_question.dart';
 import 'package:ophthalmology_board/views/quizzes_questions/add_quiz.dart';
 import 'package:ophthalmology_board/views/quizzes_questions/all_questions_view.dart';
 import 'package:ophthalmology_board/views/quizzes_questions/all_quizzes_view.dart';
-import 'package:ophthalmology_board/views/quizzes_questions/add_question.dart';
+import 'package:ophthalmology_board/widgets/custom_app_bar.dart';
 import 'package:ophthalmology_board/widgets/operative_log_header.dart';
 import 'package:ophthalmology_board/widgets/recently_operative_logs_list.dart';
-import 'package:ophthalmology_board/widgets/custom_app_bar.dart';
+
 import 'add_surgical_log.dart';
 import 'all_operative_logs_view.dart';
 
@@ -156,19 +157,19 @@ class _HomeViewState extends State<HomeView> {
               ),
               _dataServices.doctorUser.value.containsRole('admin')
                   ? ListTile(
-                leading: const Icon(Icons.book),
-                title: const Text("All users"),
-                selected: _selectedDestination == 4,
-                onTap: () {
-                  selectDestination(4);
-                  Navigator.pop(context);
-                  Future.delayed(const Duration(milliseconds: 400), () {
-                    setState(() {
-                      _pageController.jumpToPage(4);
-                    });
-                  });
-                },
-              )
+                      leading: const Icon(Icons.book),
+                      title: const Text("All users"),
+                      selected: _selectedDestination == 4,
+                      onTap: () {
+                        selectDestination(4);
+                        Navigator.pop(context);
+                        Future.delayed(const Duration(milliseconds: 400), () {
+                          setState(() {
+                            _pageController.jumpToPage(4);
+                          });
+                        });
+                      },
+                    )
                   : const SizedBox(),
               const Divider(
                 height: 1,

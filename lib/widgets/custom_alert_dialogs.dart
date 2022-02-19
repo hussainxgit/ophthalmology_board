@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import '/models/Lecture.dart';
-import '/models/Resident.dart';
 import 'package:ophthalmology_board/services/api_services.dart';
 
-showExcuseAbsenceFormDialog(BuildContext context, Map<String, dynamic>? excuseAbsence, Lecture lecture, Resident resident) {
+import '/models/lecture.dart';
+import '/models/resident.dart';
+
+showExcuseAbsenceFormDialog(BuildContext context,
+    Map<String, dynamic>? excuseAbsence, Lecture lecture, Resident resident) {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _textController = excuseAbsence != null ? TextEditingController(text: excuseAbsence['reason']) : TextEditingController();
+  TextEditingController _textController = excuseAbsence != null
+      ? TextEditingController(text: excuseAbsence['reason'])
+      : TextEditingController();
   ApiServices _services = ApiServices();
   AlertDialog alert = AlertDialog(
     title: const Text("Write excuse absence"),
@@ -26,16 +30,22 @@ showExcuseAbsenceFormDialog(BuildContext context, Map<String, dynamic>? excuseAb
               ))),
     ),
     actions: [
-      ElevatedButton(onPressed: () {
-        _services.removeExcusedAbsenceResident(lecture, resident, _textController.value.text);
-        Navigator.pop(context);
-      }, child: const Text('Remove excuse')),
-      ElevatedButton(onPressed: () {
-        if(_formKey.currentState!.validate()){
-          _services.excusedAbsenceResident(lecture, resident, _textController.value.text);
-          Navigator.pop(context);
-        }
-      }, child: const Text('Send')),
+      ElevatedButton(
+          onPressed: () {
+            _services.removeExcusedAbsenceResident(
+                lecture, resident, _textController.value.text);
+            Navigator.pop(context);
+          },
+          child: const Text('Remove excuse')),
+      ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              _services.excusedAbsenceResident(
+                  lecture, resident, _textController.value.text);
+              Navigator.pop(context);
+            }
+          },
+          child: const Text('Send')),
     ],
   );
   showDialog(

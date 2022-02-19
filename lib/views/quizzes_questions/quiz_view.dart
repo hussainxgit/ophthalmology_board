@@ -102,14 +102,16 @@ class _QuizViewState extends State<QuizView> {
             SizedBox(
               height: 50,
               width: double.infinity,
-              child: FlatButton(
+              child: TextButton(
                 onPressed: () {
                   makeSureDialog(context).then(
                       (value) => value == true ? quizFinish(context) : null);
                 },
-                padding: const EdgeInsets.all(0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.all(0)),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  )),
                 ),
                 child: Ink(
                   decoration: BoxDecoration(

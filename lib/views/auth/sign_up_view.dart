@@ -66,8 +66,8 @@ class SignupPage extends StatelessWidget {
                                 fontWeight: FontWeight.w600),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -90,8 +90,8 @@ class SignupPage extends StatelessWidget {
                                 fontWeight: FontWeight.w600),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -114,8 +114,8 @@ class SignupPage extends StatelessWidget {
                                 fontWeight: FontWeight.w600),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -138,8 +138,8 @@ class SignupPage extends StatelessWidget {
                                 fontWeight: FontWeight.w600),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -163,8 +163,8 @@ class SignupPage extends StatelessWidget {
                                 fontWeight: FontWeight.w600),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -178,22 +178,27 @@ class SignupPage extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 50,
-                          child: FlatButton(
+                          child: TextButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                _dataServices.signUpUser(DoctorUser(
-                                    name: _name.text,
-                                    email: _email.text,
-                                    phone: _phone.text,
-                                    roles: ['resident'],
-                                    rotationYear: 'R' + _residencyYear.text
-                                ), _password.text).whenComplete(() =>
-                                    Get.back());
+                                _dataServices
+                                    .signUpUser(
+                                        DoctorUser(
+                                            name: _name.text,
+                                            email: _email.text,
+                                            phone: _phone.text,
+                                            roles: ['resident'],
+                                            rotationYear:
+                                                'R' + _residencyYear.text),
+                                        _password.text)
+                                    .whenComplete(() => Get.back());
                               }
                             },
-                            padding: const EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.all(0)),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              )),
                             ),
                             child: Ink(
                               decoration: BoxDecoration(

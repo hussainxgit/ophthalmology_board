@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/state_manager.dart';
-import 'package:ophthalmology_board/models/doctor_user.dart';
 import 'package:ophthalmology_board/models/quiz.dart';
-import 'package:ophthalmology_board/services/api_services.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
 import 'package:ophthalmology_board/views/quizzes_questions/quiz_answer_details_view.dart';
 
@@ -57,13 +54,20 @@ class _QuizDetailsViewState extends State<QuizDetailsView> {
                 title: Text(
                   _dataServices.quizParticipants[index].name!,
                 ),
-                subtitle: Text(_dataServices.quizParticipants[index].quizResult == null
-                    ? 'Not finished yet'
-                    : 'Score: ' + _dataServices.quizParticipants[index].quizResult!.score.toString()),
+                subtitle: Text(
+                    _dataServices.quizParticipants[index].quizResult == null
+                        ? 'Not finished yet'
+                        : 'Score: ' +
+                            _dataServices
+                                .quizParticipants[index].quizResult!.score
+                                .toString()),
                 trailing: const Icon(Icons.keyboard_arrow_right, size: 30.0),
                 onTap: () {
-                  if(_dataServices.quizParticipants[index].quizResult != null){
-                    Get.to(() => QuizAnswerDetailsView(quizResult: _dataServices.quizParticipants[index].quizResult!));
+                  if (_dataServices.quizParticipants[index].quizResult !=
+                      null) {
+                    Get.to(() => QuizAnswerDetailsView(
+                        quizResult:
+                            _dataServices.quizParticipants[index].quizResult!));
                   }
                 },
               );

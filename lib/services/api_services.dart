@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:ophthalmology_board/models/Lecture.dart';
-import 'package:ophthalmology_board/models/Resident.dart';
 import 'package:ophthalmology_board/models/data_response.dart';
 import 'package:ophthalmology_board/models/doctor_user.dart';
+import 'package:ophthalmology_board/models/lecture.dart';
 import 'package:ophthalmology_board/models/operation.dart';
 import 'package:ophthalmology_board/models/quiz.dart';
+import 'package:ophthalmology_board/models/resident.dart';
 
 class ApiServices {
   final CollectionReference _operationsLogCollection =
@@ -39,8 +39,9 @@ class ApiServices {
   }
 
   Future editOperationLog(Operation operation) async {
-    print(operation.uid);
-    return await _operationsLogCollection.doc(operation.uid).update(operation.toFirebaseMap());
+    return await _operationsLogCollection
+        .doc(operation.uid)
+        .update(operation.toFirebaseMap());
   }
 
   Future<Operation> getOperation(String operationUid) async {
@@ -50,7 +51,6 @@ class ApiServices {
   }
 
   Future<List<Operation>> getAllOperations(DoctorUser doctor) async {
-    print(doctor.email);
     List<Operation> operations = await _operationsLogCollection.get().then(
         (collection) => collection.docs
             .map((document) => Operation.fromFirebaseMap(
@@ -191,12 +191,12 @@ class ApiServices {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      _dataResponse.setSuccess('User signed in successfully',
-          await getDoctorUserInfo(userCredential.user!.uid));
+      _dataResponse.setSuccess('Logged in', await getDoctorUserInfo(userCredential.user!.uid));
+      return _dataResponse;
     } on FirebaseAuthException catch (e) {
       _dataResponse.setError(e.code);
+      return _dataResponse;
     }
-    return _dataResponse;
   }
 
   Future<void> signUpUser(DoctorUser user, String password) async {
@@ -234,7 +234,6 @@ class ApiServices {
           .sendPasswordResetEmail(email: email)
           .whenComplete(() => _dataResponse.setSuccess('Email sent.'));
     } on FirebaseAuthException catch (e) {
-      print(e.code);
       _dataResponse.setError(e.code);
     }
     return _dataResponse;
@@ -263,7 +262,6 @@ class ApiServices {
             .map((document) => Lecture.fromFirebase(
                 document.data() as Map<String, dynamic>, document.id))
             .toList());
-    print(lectures.length);
     lectures.sort((a, b) {
       return b.date!.compareTo(a.date!);
     });

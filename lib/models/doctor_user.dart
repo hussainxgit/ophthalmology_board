@@ -32,12 +32,18 @@ class DoctorUser {
       email: map['email'] as String,
       phone: map['phone'] as String,
       rotationYear: map['rotation_year'] ?? '',
-      roles: map['roles'] != null ? (map['roles'] as List<dynamic>).map<String>((e) => e).toList() : [],
+      roles: map['roles'] != null
+          ? (map['roles'] as List<dynamic>).map<String>((e) => e).toList()
+          : [],
     );
   }
 
   bool isEmpty() {
-    if (uid == '' && name == '' && email == '' && phone == '' && rotationYear == '') {
+    if (uid == '' &&
+        name == '' &&
+        email == '' &&
+        phone == '' &&
+        rotationYear == '') {
       return true;
     } else {
       return false;

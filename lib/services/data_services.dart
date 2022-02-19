@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:ophthalmology_board/models/data_response.dart';
@@ -9,7 +8,6 @@ import 'package:ophthalmology_board/services/api_services.dart';
 
 class DataServices extends GetxController {
   final ApiServices _apiServices = ApiServices();
-  final DataResponse _dataResponse = DataResponse();
   Rx<DoctorUser> doctorUser = DoctorUser().obs;
   Rx<bool> isLogged = false.obs;
   RxList<Quiz> allQuizzes = <Quiz>[].obs;
@@ -25,6 +23,7 @@ class DataServices extends GetxController {
   Future<RxList<Operation>> getAllDoctorOperations() async {
     doctorOperations
         .assignAll(await _apiServices.getAllOperations(doctorUser.value));
+    print('Doctor operations: ' + doctorOperations.length.toString());
     doctorOperations.refresh();
     return doctorOperations;
   }
@@ -64,16 +63,19 @@ class DataServices extends GetxController {
   }
 
   initAppMainData() async {
-    await isUserSignedIn();
-    getAllDoctorOperations();
-    if (doctorUser.value.containsRole('admin')) {
-      getAllQuestions();
-      getAllQuizzes();
-      getAllUsers();
-    } else if (doctorUser.value.containsRole('resident') &&
-        doctorUser.value.containsRole('admin') != true) {
-      getResidentsUncompletedQuizzes(doctorUser.value);
-    }
+    await isUserSignedIn().then((value) {
+      if (value == true) {
+        if (doctorUser.value.containsRole('admin')) {
+          getAllQuestions();
+          getAllQuizzes();
+          getAllUsers();
+        } else if (doctorUser.value.containsRole('resident') &&
+            doctorUser.value.containsRole('admin') != true) {
+          getResidentsUncompletedQuizzes(doctorUser.value);
+        }
+        getAllDoctorOperations();
+      }
+    });
   }
 
   int getCurrentMonthLogs({required int monthInt}) {
@@ -84,13 +86,15 @@ class DataServices extends GetxController {
   }
 
   Future<DataResponse> signInUser(String email, password) async {
-    DataResponse requestResponse =
-        await _apiServices.signInUser(email, password);
-    if (requestResponse.onSuccess) {
-      doctorUser.value = requestResponse.object as DoctorUser;
+    DataResponse response = await _apiServices.signInUser(email, password);
+    if (response.onSuccess) {
+      doctorUser.value = response.object as DoctorUser;
       isLogged.value = true;
+      isLogged.refresh();
+      doctorUser.refresh();
+      initAppMainData();
     }
-    return requestResponse;
+    return response;
   }
 
   Future signUpUser(DoctorUser user, String password) async {

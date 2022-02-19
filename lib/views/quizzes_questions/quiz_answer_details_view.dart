@@ -19,7 +19,8 @@ class QuizAnswerDetailsView extends StatelessWidget {
             const SizedBox(
               height: 20.0,
             ),
-            Center(child: Text('Duration taken: ${quizResult.duration} seconds')),
+            Center(
+                child: Text('Duration taken: ${quizResult.duration} seconds')),
             ListView.builder(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
@@ -41,7 +42,9 @@ class QuizAnswerDetailsView extends StatelessWidget {
                     ],
                   );
                 }),
-            const Center(child: Text('please give hussain A kinder, and he will finish this page soon')),
+            const Center(
+                child: Text(
+                    'please give hussain A kinder, and he will finish this page soon')),
           ],
         ));
   }

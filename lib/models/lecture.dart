@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'Resident.dart';
+
+import 'resident.dart';
 
 class Lecture {
   String? id, location, lecturer, subject;
@@ -57,8 +58,16 @@ class Lecture {
       lecturer: map['lecturer'] as String,
       date: DateTime.fromMillisecondsSinceEpoch(timestampDate.seconds * 1000),
       subject: map['subject'] as String,
-      residents: map['residents'] != null ? (map['residents'] as List<dynamic>).map<Map<String, dynamic>>((item) => item).toList() : [],
-      excusedAbsence: map['excusedAbsence'] != null ? (map['excusedAbsence'] as List<dynamic>).map<Map<String, dynamic>>((item) => item).toList() : [],
+      residents: map['residents'] != null
+          ? (map['residents'] as List<dynamic>)
+              .map<Map<String, dynamic>>((item) => item)
+              .toList()
+          : [],
+      excusedAbsence: map['excusedAbsence'] != null
+          ? (map['excusedAbsence'] as List<dynamic>)
+              .map<Map<String, dynamic>>((item) => item)
+              .toList()
+          : [],
     );
   }
 
@@ -92,21 +101,18 @@ class Lecture {
     for (var resident in givenResident) {
       if (residents!.contains(resident.name)) {
         getAttendedR.add(resident);
-      }else {
+      } else {
         return null;
       }
     }
     return getAttendedR;
   }
 
-  Map<String, dynamic> getExcusedAbsenceByName(String name){
+  Map<String, dynamic> getExcusedAbsenceByName(String name) {
     return excusedAbsence!.firstWhere((o) => o['name'] == name);
   }
 
-  Map<String, dynamic> getAttendedByName(String name){
+  Map<String, dynamic> getAttendedByName(String name) {
     return residents!.firstWhere((o) => o['name'] == name);
-
   }
-
-
 }

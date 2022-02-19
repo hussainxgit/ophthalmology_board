@@ -37,13 +37,19 @@ class Quiz {
       uid: uid,
       title: map['title'] as String,
       creator: map['creator'] as String,
-      duration: map['duration'] as int ,
+      duration: map['duration'] as int,
       creationDate: (map['creationDate'] as Timestamp).toDate(),
       startDate: (map['startDate'] as Timestamp).toDate(),
       deadlineDate: (map['deadlineDate'] as Timestamp).toDate(),
-      participants:( map['participants'] as List<dynamic>).map<String>((e) => e).toList(),
-      questions: (map['questions'] as List<dynamic>).map<String>((e) => e).toList(),
-      completedParticipants: map['completed_participants'] != null ? (map['completed_participants'] as List<dynamic>).map<String>((e) => e).toList() : [],
+      participants:
+          (map['participants'] as List<dynamic>).map<String>((e) => e).toList(),
+      questions:
+          (map['questions'] as List<dynamic>).map<String>((e) => e).toList(),
+      completedParticipants: map['completed_participants'] != null
+          ? (map['completed_participants'] as List<dynamic>)
+              .map<String>((e) => e)
+              .toList()
+          : [],
     );
   }
 }
@@ -75,14 +81,15 @@ class QuizResult {
   }
 
   factory QuizResult.fromMap(Map<String, dynamic> map, String uid) {
-
     return QuizResult(
       uid: uid,
       doctorUid: map['doctorUid'] as String,
       quizUid: map['quizUid'] as String,
       duration: map['duration'] as int,
       score: map['score'] as int,
-      chosenAnswers: (map['chosenAnswers'] as List<dynamic>).map<Map<String, dynamic>>((e) => e).toList(),
+      chosenAnswers: (map['chosenAnswers'] as List<dynamic>)
+          .map<Map<String, dynamic>>((e) => e)
+          .toList(),
       // documentDate: map['documentDate'] as Timestamp,
     );
   }

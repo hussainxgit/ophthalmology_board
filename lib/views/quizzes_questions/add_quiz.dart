@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:ophthalmology_board/models/quiz.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
 import 'package:ophthalmology_board/widgets/custom_app_bar.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 
 class AddQuiz extends StatefulWidget {
   const AddQuiz({Key? key}) : super(key: key);
@@ -105,6 +105,7 @@ class _AddQuizState extends State<AddQuiz> {
                         if (value == null || value.isEmpty) {
                           return 'Write Quiz title';
                         }
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: "Quiz title",
@@ -174,6 +175,7 @@ class _AddQuizState extends State<AddQuiz> {
                           if (value == null || value.isEmpty) {
                             return 'Please specify duration of quiz';
                           }
+                          return null;
                         },
                         decoration: InputDecoration(
                           labelText: "Quiz duration in minutes",
