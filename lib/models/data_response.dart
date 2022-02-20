@@ -4,12 +4,12 @@ class DataResponse {
   bool onSuccess = false;
   Object? object;
 
-  setError(String errorMessage) =>
-      {
+  setError(String errorMessage) => {
         successMessage = null,
         onSuccess = false,
         object = null,
-        onError = true, errorCode = errorMessage
+        onError = true,
+        errorCode = errorMessage
       };
 
   setSuccess(String successMessage, [Object? object]) => {

@@ -3,16 +3,29 @@ import 'package:get/route_manager.dart';
 import 'package:ophthalmology_board/models/doctor_user.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
 
-class SignupPage extends StatelessWidget {
-  SignupPage({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
 
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
   final TextEditingController _email = TextEditingController();
+
   final TextEditingController _password = TextEditingController();
+
   final TextEditingController _residencyYear = TextEditingController();
+
   final TextEditingController _name = TextEditingController();
+
   final TextEditingController _phone = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
+
   final DataServices _dataServices = DataServices();
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +55,7 @@ class SignupPage extends StatelessWidget {
                         height: 6,
                       ),
                       Text(
-                        "Sign up to get started!",
+                        "Sign up to get started !",
                         style: TextStyle(
                             fontSize: 20, color: Colors.grey.shade400),
                       ),
@@ -57,6 +70,12 @@ class SignupPage extends StatelessWidget {
                       children: <Widget>[
                         TextFormField(
                           controller: _name,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.name,
                           decoration: InputDecoration(
                             labelText: "Full Name",
@@ -81,6 +100,12 @@ class SignupPage extends StatelessWidget {
                         ),
                         TextFormField(
                           controller: _email,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             labelText: "Email ID",
@@ -105,6 +130,12 @@ class SignupPage extends StatelessWidget {
                         ),
                         TextFormField(
                           controller: _phone,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.phone,
                           decoration: InputDecoration(
                             labelText: "Phone",
@@ -129,6 +160,12 @@ class SignupPage extends StatelessWidget {
                         ),
                         TextFormField(
                           controller: _residencyYear,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your residency year';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             labelText: "Residency year",
@@ -153,6 +190,14 @@ class SignupPage extends StatelessWidget {
                         ),
                         TextFormField(
                           controller: _password,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            } else if (value.length < 6) {
+                              return 'Password must be at least 6 in length';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: true,
                           decoration: InputDecoration(
@@ -178,25 +223,14 @@ class SignupPage extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 50,
-                          child: TextButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _dataServices
-                                    .signUpUser(
-                                        DoctorUser(
-                                            name: _name.text,
-                                            email: _email.text,
-                                            phone: _phone.text,
-                                            roles: ['resident'],
-                                            rotationYear:
-                                                'R' + _residencyYear.text),
-                                        _password.text)
-                                    .whenComplete(() => Get.back());
-                              }
-                            },
+                          child: ElevatedButton(
+                            onPressed: (isLoading) ? null : () => submit(),
                             style: ButtonStyle(
-                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.all(0)),
-                              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      const EdgeInsets.all(0)),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                  RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(6),
                               )),
                             ),
@@ -213,13 +247,21 @@ class SignupPage extends StatelessWidget {
                                 alignment: Alignment.center,
                                 constraints: const BoxConstraints(
                                     minHeight: 50, maxWidth: double.infinity),
-                                child: const Text(
-                                  "Sign up",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                  textAlign: TextAlign.center,
-                                ),
+                                child: (isLoading)
+                                    ? const SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 1.5,
+                                        ))
+                                    : const Text(
+                                        "Sign up",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                        textAlign: TextAlign.center,
+                                      ),
                               ),
                             ),
                           ),
@@ -259,5 +301,34 @@ class SignupPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  submit() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      _dataServices
+          .signUpUser(
+              DoctorUser(
+                  name: _name.text,
+                  email: _email.text,
+                  phone: _phone.text,
+                  roles: ['resident'],
+                  rotationYear: 'R' + _residencyYear.text),
+              _password.text)
+          .whenComplete(() => Get.back());
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _name.dispose();
+    _email.dispose();
+    _phone.dispose();
+    _residencyYear.dispose();
+    _password.dispose();
   }
 }

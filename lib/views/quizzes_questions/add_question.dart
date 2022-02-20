@@ -14,14 +14,13 @@ class AddQuestion extends StatefulWidget {
 
 class _AddQuestionState extends State<AddQuestion> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final DataServices _dataServices = Get.find();
   TextEditingController dateCtl = TextEditingController();
   TextEditingController questionController = TextEditingController();
   TextEditingController choicesController = TextEditingController();
   Map<String, dynamic> questionChoices = {};
   DateTime selectedDate = DateTime.now();
   List<int> answers = [];
-  final DataServices _dataServices = Get.find();
 
   Future<DateTime?> showDate(BuildContext context) async {
     return await showDatePicker(
@@ -32,34 +31,27 @@ class _AddQuestionState extends State<AddQuestion> {
         selectedDate;
   }
 
-  Question question = Question();
+  Question question = Question(choices1: []);
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         actionList: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            tooltip: 'Send',
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                if (answers.isEmpty) {
-                  return;
-                } else if (questionChoices.isEmpty) {
-                  return;
-                }
-                question.creator = 'aseel';
-                question.question = questionController.text;
-                question.choices = questionChoices;
-                question.answer = answers;
-                question.creationDate = selectedDate;
-                _dataServices
-                    .addQuestion(question)
-                    .whenComplete(() => Get.back());
-              }
-            },
-          ),
+          (isLoading)
+              ? Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: const CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 1.5,
+                  ),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.save),
+                  tooltip: 'Send',
+                  onPressed: () => submit(),
+                ),
         ],
       ),
       body: Padding(
@@ -120,10 +112,9 @@ class _AddQuestionState extends State<AddQuestion> {
                       onEditingComplete: () {
                         setState(() {
                           if (choicesController.text.isNotEmpty) {
-                            questionChoices.addAll({
-                              (questionChoices.length.toString()):
-                                  choicesController.text
-                            });
+                            question.choices1!.add(Choice(
+                                choice: choicesController.text,
+                                isAnswer: false));
                           }
                         });
                       },
@@ -152,55 +143,37 @@ class _AddQuestionState extends State<AddQuestion> {
                     ),
                     ListView.builder(
                         shrinkWrap: true,
-                        itemCount: questionChoices.length,
+                        itemCount: question.choices1!.length,
                         itemBuilder: (context, index) {
                           return ListTile(
                             leading: SizedBox(
                                 child: Text((index + 1).toString() + ' -')),
-                            title: Text(questionChoices[index.toString()]),
+                            title: Text(question.choices1![index].choice),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                answers
-                                        .where(
-                                            (element) => element == (index + 1))
-                                        .isEmpty
+                                (question.choices1![index].isAnswer == false)
                                     ? IconButton(
                                         onPressed: () {
                                           setState(() {
-                                            answers.add((index + 1));
+                                            question.choices1![index].isAnswer =
+                                                true;
                                           });
                                         },
                                         icon: const Icon(Icons.done))
                                     : IconButton(
                                         onPressed: () {
                                           setState(() {
-                                            answers.remove((index + 1));
+                                            question.choices1![index].isAnswer =
+                                                false;
                                           });
                                         },
                                         icon: const Icon(Icons.close)),
                                 IconButton(
                                     onPressed: () {
                                       setState(() {
-                                        Map<String, dynamic> tempChoicesMap =
-                                            {};
-                                        int temp = 0;
-                                        questionChoices.removeWhere(
-                                            (key, value) =>
-                                                key == index.toString());
-                                        questionChoices.forEach((key, value) {
-                                          tempChoicesMap
-                                              .addAll({temp.toString(): value});
-                                          temp++;
-                                        });
-                                        questionChoices.clear();
-                                        questionChoices.addAll(tempChoicesMap);
-                                        if (answers.isNotEmpty) {
-                                          answers.remove(answers
-                                              .where((element) =>
-                                                  element == (index + 1))
-                                              .single);
-                                        }
+                                        question.choices1!
+                                            .remove(question.choices1![index]);
                                       });
                                     },
                                     icon: const Icon(Icons.delete)),
@@ -211,19 +184,38 @@ class _AddQuestionState extends State<AddQuestion> {
                     const SizedBox(
                       height: 20.0,
                     ),
-                    const Text(
-                      'Answers',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    ListTile(
-                      title: Text(answers.isEmpty ? '' : answers.toString()),
-                    ),
                   ],
                 ))
           ],
         ),
       ),
     );
+  }
+
+  submit() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      if (question.choices1!.isEmpty) {
+        return;
+      }
+      question.creator = _dataServices.doctorUser.value.name;
+      question.question = questionController.text;
+      question.creationDate = selectedDate;
+      _dataServices.addQuestion(question).whenComplete(() => Get.back());
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    dateCtl.dispose();
+    choicesController.dispose();
+    questionController.dispose();
   }
 }

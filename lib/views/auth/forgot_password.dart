@@ -3,6 +3,8 @@ import 'package:get/route_manager.dart';
 import 'package:ophthalmology_board/services/api_services.dart';
 import 'package:ophthalmology_board/views/auth/sign_up_view.dart';
 
+import '../../widgets/custom_messages.dart';
+
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
 
@@ -38,7 +40,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           height: 50,
                         ),
                         const Text(
-                          "Welcome,",
+                          "Don't worry,",
                           style: TextStyle(
                               fontSize: 26, fontWeight: FontWeight.bold),
                         ),
@@ -46,7 +48,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           height: 6,
                         ),
                         Text(
-                          "Sign in to continue!",
+                          "Lost your password ?, Hussain got your back ;)",
                           style: TextStyle(
                               fontSize: 20, color: Colors.grey.shade400),
                         ),
@@ -99,10 +101,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 gradient: const LinearGradient(
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
-                                  colors: [
-                                    Colors.lightBlue,
-                                    Colors.blueAccent
-                                  ],
+                                  colors: [Colors.lightBlue, Colors.blueAccent],
                                 ),
                                 borderRadius: BorderRadius.circular(6),
                               ),
@@ -165,14 +164,33 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   submit() {
     _apiServices.userForgotPassword(_email.text).then((value) {
-      if (value.onError) {
-        print('wrong email');
-        setState(() {
-          _emailError = "Couldn't find your email";
-        });
-      } else if (value.onSuccess) {
-        print(value.successMessage);
-      }
+      setState(() {
+        isLoading = true;
+      });
+      setState(() {
+        if (value.onError && value.errorCode == 'user-not-found') {
+          _emailError = "Couldn't find your email, Please check your email";
+        } else if (value.onError && value.errorCode == 'user-disabled') {
+          _emailError =
+              "Your account has been disabled, Please contact Mr.Hussain.";
+        } else if (value.onError && value.errorCode == 'invalid-email') {
+          _emailError = "Invalid email, Please check your email.";
+        } else if (value.onSuccess) {
+          showCustomSnackBar(
+              context, 'Rest password email sent, please check your email');
+          Get.back();
+        }
+      });
+      setState(() {
+        isLoading = false;
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _email.dispose();
   }
 }

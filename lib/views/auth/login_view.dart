@@ -4,7 +4,6 @@ import 'package:get/route_manager.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
 import 'package:ophthalmology_board/views/auth/forgot_password.dart';
 import 'package:ophthalmology_board/views/auth/sign_up_view.dart';
-import 'package:ophthalmology_board/widgets/custom_dialogs.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -156,19 +155,19 @@ class _LoginViewState extends State<LoginView> {
                                     minHeight: 50, maxWidth: double.infinity),
                                 child: (isLoading)
                                     ? const SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 1.5,
-                                    ))
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 1.5,
+                                        ))
                                     : const Text(
-                                  "Sign in",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                  textAlign: TextAlign.center,
-                                ),
+                                        "Sign in",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                        textAlign: TextAlign.center,
+                                      ),
                               ),
                             ),
                           ),
@@ -213,29 +212,21 @@ class _LoginViewState extends State<LoginView> {
     setState(() {
       isLoading = true;
     });
-    _dataServices
-        .signInUser(_email.text, _password.text)
-        .then((value) {
+    _dataServices.signInUser(_email.text, _password.text).then((value) {
       setState(() {
-        if (value.onError &&
-            value.errorCode == 'user-not-found') {
-          _emailError =
-          "We couldn't find this email, Please check your email.";
+        if (value.onError && value.errorCode == 'user-not-found') {
+          _emailError = "We couldn't find this email, Please check your email.";
         }
-        if (value.onError &&
-            value.errorCode == 'invalid-email') {
-          _emailError =
-          "Invalid email, Please check your email.";
+        if (value.onError && value.errorCode == 'invalid-email') {
+          _emailError = "Invalid email, Please check your email.";
         }
-        if (value.onError &&
-            value.errorCode == 'user-disabled') {
+        if (value.onError && value.errorCode == 'user-disabled') {
           _emailError =
-          "Your account has been disabled, Please contact Mr.Hussain.";
+              "Your account has been disabled, Please contact Mr.Hussain.";
         }
-        if (value.onError &&
-            value.errorCode == 'wrong-password') {
+        if (value.onError && value.errorCode == 'wrong-password') {
           _passwordError =
-          "Wrong password, if you don't remembering it you can rest it.";
+              "Wrong password, if you don't remembering it you can rest it.";
         }
       });
       setState(() {
@@ -245,5 +236,13 @@ class _LoginViewState extends State<LoginView> {
         Get.back();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _email.dispose();
+    _password.dispose();
   }
 }

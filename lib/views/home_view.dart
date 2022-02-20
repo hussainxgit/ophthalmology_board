@@ -29,7 +29,7 @@ class _HomeViewState extends State<HomeView> {
         icon: const Icon(Icons.add),
         tooltip: 'Add log',
         onPressed: () {
-          Get.to(const AddSurgicalLog());
+          Get.to(() => const AddSurgicalLog());
         },
       ),
       IconButton(

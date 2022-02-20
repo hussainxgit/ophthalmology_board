@@ -20,11 +20,12 @@ class QuizView extends StatefulWidget {
 class _QuizViewState extends State<QuizView> {
   final DataServices _dataServices = Get.find();
   final ApiServices _apiServices = ApiServices();
-  List<Map<String, int>> chosenAnswers = [];
+  List<Map<String, dynamic>> chosenAnswers = [];
   List<Question> quizQuestions = [];
   int durationInSeconds = 0;
   int durationInMinutes = 0;
   int quizDurationResult = 0;
+  int score = 0;
 
   @override
   void initState() {
@@ -70,30 +71,15 @@ class _QuizViewState extends State<QuizView> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            FutureBuilder(
-                future: _dataServices.getQuizQuestions(widget.quiz),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    quizQuestions = snapshot.data;
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const ScrollPhysics(),
-                        itemCount: _dataServices.quizQuestions.length,
-                        itemBuilder: (BuildContext context, index) {
-                          return QuizQuestion(
-                              question: _dataServices.quizQuestions[index],
-                              chooseAnswer: chooseAnswer,
-                              clearAnswer: clearAnswer);
-                        });
-                  } else if (snapshot.hasError) {
-                    return Container(
-                        margin: const EdgeInsets.all(30.0),
-                        child: Text(snapshot.error.toString()));
-                  } else {
-                    return Container(
-                        margin: const EdgeInsets.all(30.0),
-                        child: const Text('Loading'));
-                  }
+            ListView.builder(
+                shrinkWrap: true,
+                physics: const ScrollPhysics(),
+                itemCount: widget.quiz.questions1!.length,
+                itemBuilder: (BuildContext context, index) {
+                  return QuizQuestion(
+                      question: widget.quiz.questions1![index],
+                      chooseAnswer: chooseAnswer,
+                      clearAnswer: clearAnswer);
                 }),
             const Divider(),
             const SizedBox(
@@ -108,8 +94,10 @@ class _QuizViewState extends State<QuizView> {
                       (value) => value == true ? quizFinish(context) : null);
                 },
                 style: ButtonStyle(
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.all(0)),
-                  shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      const EdgeInsets.all(0)),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   )),
                 ),
@@ -142,8 +130,8 @@ class _QuizViewState extends State<QuizView> {
     );
   }
 
-  void chooseAnswer(String questionUid, int answer) {
-    Map<String, int> data = {questionUid: answer};
+  void chooseAnswer(String questionUid, Choice answer) {
+    Map<String, dynamic> data = {questionUid: answer.toMap()};
     setState(() {
       if (chosenAnswers.isNotEmpty) {
         chosenAnswers.removeWhere((element) => element[questionUid] != null);
@@ -153,7 +141,7 @@ class _QuizViewState extends State<QuizView> {
     print(chosenAnswers);
   }
 
-  void clearAnswer(String questionUid) {
+  void clearAnswer(String questionUid, Choice answer) {
     setState(() {
       chosenAnswers.removeWhere((element) => element[questionUid] != null);
     });
@@ -161,14 +149,11 @@ class _QuizViewState extends State<QuizView> {
   }
 
   Future<void> quizFinish(BuildContext context) async {
-    int score = 0;
-    for (var element in chosenAnswers) {
-      if (quizQuestions
-          .where((i) => i.uid == element.keys.single)
-          .single
-          .answer!
-          .contains(element.values.single)) {
-        score++;
+    for (var e in chosenAnswers) {
+      for(var k in e.values ){
+        if(k['isAnswer'] == true){
+          score++;
+        }
       }
     }
     _apiServices

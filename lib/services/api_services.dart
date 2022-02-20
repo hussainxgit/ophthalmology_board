@@ -191,7 +191,8 @@ class ApiServices {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      _dataResponse.setSuccess('Logged in', await getDoctorUserInfo(userCredential.user!.uid));
+      _dataResponse.setSuccess(
+          'Logged in', await getDoctorUserInfo(userCredential.user!.uid));
       return _dataResponse;
     } on FirebaseAuthException catch (e) {
       _dataResponse.setError(e.code);

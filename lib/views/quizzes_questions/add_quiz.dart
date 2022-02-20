@@ -19,7 +19,6 @@ class _AddQuizState extends State<AddQuiz> {
   TextEditingController titleController = TextEditingController();
   TextEditingController durationController = TextEditingController();
   List<String> participants = [];
-  List<String> questions = [];
   DateTime selectedDate = DateTime.now();
   DateTime selectedDate2 = DateTime.now();
   final DataServices _dataServices = Get.find();
@@ -45,6 +44,7 @@ class _AddQuizState extends State<AddQuiz> {
   }
 
   Question question = Question();
+  Quiz quiz = Quiz(questions1: []);
 
   @override
   Widget build(BuildContext context) {
@@ -58,21 +58,19 @@ class _AddQuizState extends State<AddQuiz> {
               if (_formKey.currentState!.validate()) {
                 if (participants.isEmpty) {
                   return;
-                } else if (questions.isEmpty) {
+                } else if (quiz.questions1!.isEmpty) {
                   return;
                 }
                 durationInSeconds = double.parse(durationController.text) * 60;
-                _dataServices
-                    .createQuiz(Quiz(
-                        title: titleController.text,
-                        participants: participants,
-                        questions: questions,
-                        startDate: selectedDate,
-                        deadlineDate: selectedDate2,
-                        duration: durationInSeconds.round(),
-                        creationDate: DateTime.now(),
-                        creator: 'aseel'))
-                    .whenComplete(() => Get.back());
+                quiz.title = titleController.text;
+                quiz.participants = participants;
+                quiz.startDate = selectedDate;
+                quiz.deadlineDate = selectedDate2;
+                quiz.questions1 = quiz.questions1;
+                quiz.duration = durationInSeconds.round();
+                quiz.creationDate = DateTime.now();
+                quiz.creator = _dataServices.doctorUser.value.name;
+                _dataServices.createQuiz(quiz).whenComplete(() => Get.back());
               }
             },
           ),
@@ -271,19 +269,19 @@ class _AddQuizState extends State<AddQuiz> {
                           ),
                           trailing: const Icon(Icons.keyboard_arrow_right,
                               size: 30.0),
-                          tileColor: questions
-                                  .where((element) => element == question.uid)
+                          tileColor: quiz.questions1!
+                                  .where((element) => element == question)
                                   .isNotEmpty
                               ? Colors.blueAccent
                               : Colors.white,
                           onTap: () {
                             setState(() {
-                              if (questions
-                                  .where((element) => element == question.uid)
+                              if (quiz.questions1!
+                                  .where((element) => element == question)
                                   .isNotEmpty) {
-                                questions.remove(question.uid);
+                                quiz.questions1!.remove(question);
                               } else {
-                                questions.add(question.uid!);
+                                quiz.questions1!.add(question);
                               }
                             });
                           },

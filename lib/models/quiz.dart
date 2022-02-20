@@ -5,6 +5,7 @@ class Quiz {
   DateTime? creationDate, startDate, deadlineDate;
   List<String>? participants = [], questions = [], completedParticipants = [];
   int? duration;
+  List<Question>? questions1 = [];
 
   Quiz({
     this.uid,
@@ -15,6 +16,7 @@ class Quiz {
     this.deadlineDate,
     this.participants,
     this.questions,
+    this.questions1,
     this.duration,
     this.completedParticipants,
   });
@@ -27,7 +29,7 @@ class Quiz {
       'startDate': startDate,
       'deadlineDate': deadlineDate,
       'participants': participants,
-      'questions': questions,
+      'questions1': questions1!.map((e) => e.toMap2()).toList(),
       'duration': duration,
     };
   }
@@ -43,8 +45,9 @@ class Quiz {
       deadlineDate: (map['deadlineDate'] as Timestamp).toDate(),
       participants:
           (map['participants'] as List<dynamic>).map<String>((e) => e).toList(),
-      questions:
-          (map['questions'] as List<dynamic>).map<String>((e) => e).toList(),
+      questions1: (map['questions1'] as List<dynamic>)
+          .map<Question>((e) => Question.fromMap2(e))
+          .toList(),
       completedParticipants: map['completed_participants'] != null
           ? (map['completed_participants'] as List<dynamic>)
               .map<String>((e) => e)
@@ -97,15 +100,13 @@ class QuizResult {
 
 class Question {
   String? uid, question, creator;
-  List<int>? answer = [];
-  Map<String, dynamic>? choices;
   DateTime? creationDate;
+  List<Choice>? choices1 = [];
 
   Question({
     this.uid,
     this.question,
-    this.answer,
-    this.choices,
+    this.choices1,
     this.creator,
     this.creationDate,
   });
@@ -113,8 +114,7 @@ class Question {
   Map<String, dynamic> toMap() {
     return {
       'question': question,
-      'answer': answer,
-      'choices': choices,
+      'choices1': choices1!.map((e) => e.toMap()).toList(),
       'creator': creator,
       'creationDate': creationDate,
     };
@@ -122,12 +122,54 @@ class Question {
 
   factory Question.fromMap(Map<String, dynamic> map, String uid) {
     return Question(
-      uid: uid,
-      question: map['question'] as String,
-      creator: map['creator'] as String,
-      creationDate: (map['creationDate'] as Timestamp).toDate(),
-      answer: map['answer'].cast<int>(),
-      choices: map['choices'] as Map<String, dynamic>,
+        uid: uid,
+        question: map['question'] as String,
+        creator: map['creator'] as String,
+        creationDate: (map['creationDate'] as Timestamp).toDate(),
+        choices1: (map['choices1'] as List<dynamic>)
+            .map((e) => Choice.fromMap(e))
+            .toList());
+  }
+
+  factory Question.fromMap2(Map<String, dynamic> map) {
+    return Question(
+        uid: map['uid'] as String,
+        question: map['question'] as String,
+        creator: map['creator'] as String,
+        creationDate: (map['creationDate'] as Timestamp).toDate(),
+        choices1: (map['choices1'] as List<dynamic>)
+            .map((e) => Choice.fromMap(e))
+            .toList());
+  }
+
+  Map<String, dynamic> toMap2() {
+    return {
+      'uid': uid,
+      'question': question,
+      'choices1': choices1!.map((e) => e.toMap()).toList(),
+      'creator': creator,
+      'creationDate': creationDate,
+    };
+  }
+}
+
+class Choice {
+  String choice;
+  bool isAnswer;
+
+  Choice({required this.choice, required this.isAnswer});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'choice': choice,
+      'isAnswer': isAnswer,
+    };
+  }
+
+  factory Choice.fromMap(Map<String, dynamic> map) {
+    return Choice(
+      choice: map['choice'] as String,
+      isAnswer: map['isAnswer'] as bool,
     );
   }
 }
