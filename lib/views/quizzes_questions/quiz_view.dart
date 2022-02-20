@@ -38,6 +38,7 @@ class _QuizViewState extends State<QuizView> {
     durationInMinutes = (durationInSeconds / 60).round();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black87,
         title: Text(
             '${widget.quiz.questions!.length}/${chosenAnswers.length} answered'),
         actions: [
