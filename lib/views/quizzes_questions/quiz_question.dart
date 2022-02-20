@@ -40,7 +40,7 @@ class _QuizQuestionState extends State<QuizQuestion> {
               ListView.builder(
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),
-                  itemCount: widget.question.choices1!.length,
+                  itemCount: widget.question.choices!.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       tileColor:
@@ -48,20 +48,20 @@ class _QuizQuestionState extends State<QuizQuestion> {
                       onTap: () {
                         if (selectedAnswer == index) {
                           setState(() {
-                            widget.clearAnswer(widget.question.uid,widget.question.choices1![index]);
+                            widget.clearAnswer(widget.question.uid,widget.question.choices![index]);
                             selectedAnswer = null;
                           });
                         } else {
                           setState(() {
                             widget.chooseAnswer(widget.question.uid,
-                                widget.question.choices1![index]);
+                                widget.question.choices![index]);
                             selectedAnswer = index;
                           });
                         }
                       },
                       leading:
                           SizedBox(child: Text((index + 1).toString() + ' -')),
-                      title: Text(widget.question.choices1![index].choice),
+                      title: Text(widget.question.choices![index].choice),
                     );
                   }),
               const Divider(),

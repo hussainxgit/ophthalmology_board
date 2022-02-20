@@ -74,10 +74,10 @@ class _QuizViewState extends State<QuizView> {
             ListView.builder(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
-                itemCount: widget.quiz.questions1!.length,
+                itemCount: widget.quiz.questions!.length,
                 itemBuilder: (BuildContext context, index) {
                   return QuizQuestion(
-                      question: widget.quiz.questions1![index],
+                      question: widget.quiz.questions![index],
                       chooseAnswer: chooseAnswer,
                       clearAnswer: clearAnswer);
                 }),

@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Quiz {
   String? uid, title, creator;
   DateTime? creationDate, startDate, deadlineDate;
-  List<String>? participants = [], questions = [], completedParticipants = [];
+  List<String>? participants = [], completedParticipants = [];
   int? duration;
-  List<Question>? questions1 = [];
+  List<Question>? questions = [];
 
   Quiz({
     this.uid,
@@ -16,7 +16,6 @@ class Quiz {
     this.deadlineDate,
     this.participants,
     this.questions,
-    this.questions1,
     this.duration,
     this.completedParticipants,
   });
@@ -29,7 +28,7 @@ class Quiz {
       'startDate': startDate,
       'deadlineDate': deadlineDate,
       'participants': participants,
-      'questions1': questions1!.map((e) => e.toMap2()).toList(),
+      'questions1': questions!.map((e) => e.toMap2()).toList(),
       'duration': duration,
     };
   }
@@ -45,7 +44,7 @@ class Quiz {
       deadlineDate: (map['deadlineDate'] as Timestamp).toDate(),
       participants:
           (map['participants'] as List<dynamic>).map<String>((e) => e).toList(),
-      questions1: (map['questions1'] as List<dynamic>)
+      questions: (map['questions1'] as List<dynamic>)
           .map<Question>((e) => Question.fromMap2(e))
           .toList(),
       completedParticipants: map['completed_participants'] != null
@@ -101,12 +100,12 @@ class QuizResult {
 class Question {
   String? uid, question, creator;
   DateTime? creationDate;
-  List<Choice>? choices1 = [];
+  List<Choice>? choices = [];
 
   Question({
     this.uid,
     this.question,
-    this.choices1,
+    this.choices,
     this.creator,
     this.creationDate,
   });
@@ -114,7 +113,7 @@ class Question {
   Map<String, dynamic> toMap() {
     return {
       'question': question,
-      'choices1': choices1!.map((e) => e.toMap()).toList(),
+      'choices1': choices!.map((e) => e.toMap()).toList(),
       'creator': creator,
       'creationDate': creationDate,
     };
@@ -126,7 +125,7 @@ class Question {
         question: map['question'] as String,
         creator: map['creator'] as String,
         creationDate: (map['creationDate'] as Timestamp).toDate(),
-        choices1: (map['choices1'] as List<dynamic>)
+        choices: (map['choices1'] as List<dynamic>)
             .map((e) => Choice.fromMap(e))
             .toList());
   }
@@ -137,7 +136,7 @@ class Question {
         question: map['question'] as String,
         creator: map['creator'] as String,
         creationDate: (map['creationDate'] as Timestamp).toDate(),
-        choices1: (map['choices1'] as List<dynamic>)
+        choices: (map['choices1'] as List<dynamic>)
             .map((e) => Choice.fromMap(e))
             .toList());
   }
@@ -146,7 +145,7 @@ class Question {
     return {
       'uid': uid,
       'question': question,
-      'choices1': choices1!.map((e) => e.toMap()).toList(),
+      'choices1': choices!.map((e) => e.toMap()).toList(),
       'creator': creator,
       'creationDate': creationDate,
     };

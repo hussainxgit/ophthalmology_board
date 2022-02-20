@@ -31,7 +31,7 @@ class _AddQuestionState extends State<AddQuestion> {
         selectedDate;
   }
 
-  Question question = Question(choices1: []);
+  Question question = Question(choices: []);
   bool isLoading = false;
 
   @override
@@ -112,7 +112,7 @@ class _AddQuestionState extends State<AddQuestion> {
                       onEditingComplete: () {
                         setState(() {
                           if (choicesController.text.isNotEmpty) {
-                            question.choices1!.add(Choice(
+                            question.choices!.add(Choice(
                                 choice: choicesController.text,
                                 isAnswer: false));
                           }
@@ -143,20 +143,20 @@ class _AddQuestionState extends State<AddQuestion> {
                     ),
                     ListView.builder(
                         shrinkWrap: true,
-                        itemCount: question.choices1!.length,
+                        itemCount: question.choices!.length,
                         itemBuilder: (context, index) {
                           return ListTile(
                             leading: SizedBox(
                                 child: Text((index + 1).toString() + ' -')),
-                            title: Text(question.choices1![index].choice),
+                            title: Text(question.choices![index].choice),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                (question.choices1![index].isAnswer == false)
+                                (question.choices![index].isAnswer == false)
                                     ? IconButton(
                                         onPressed: () {
                                           setState(() {
-                                            question.choices1![index].isAnswer =
+                                            question.choices![index].isAnswer =
                                                 true;
                                           });
                                         },
@@ -164,7 +164,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                     : IconButton(
                                         onPressed: () {
                                           setState(() {
-                                            question.choices1![index].isAnswer =
+                                            question.choices![index].isAnswer =
                                                 false;
                                           });
                                         },
@@ -172,8 +172,8 @@ class _AddQuestionState extends State<AddQuestion> {
                                 IconButton(
                                     onPressed: () {
                                       setState(() {
-                                        question.choices1!
-                                            .remove(question.choices1![index]);
+                                        question.choices!
+                                            .remove(question.choices![index]);
                                       });
                                     },
                                     icon: const Icon(Icons.delete)),
@@ -197,7 +197,7 @@ class _AddQuestionState extends State<AddQuestion> {
       setState(() {
         isLoading = true;
       });
-      if (question.choices1!.isEmpty) {
+      if (question.choices!.isEmpty) {
         return;
       }
       question.creator = _dataServices.doctorUser.value.name;

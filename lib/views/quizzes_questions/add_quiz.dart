@@ -44,7 +44,7 @@ class _AddQuizState extends State<AddQuiz> {
   }
 
   Question question = Question();
-  Quiz quiz = Quiz(questions1: []);
+  Quiz quiz = Quiz(questions: []);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class _AddQuizState extends State<AddQuiz> {
               if (_formKey.currentState!.validate()) {
                 if (participants.isEmpty) {
                   return;
-                } else if (quiz.questions1!.isEmpty) {
+                } else if (quiz.questions!.isEmpty) {
                   return;
                 }
                 durationInSeconds = double.parse(durationController.text) * 60;
@@ -66,7 +66,7 @@ class _AddQuizState extends State<AddQuiz> {
                 quiz.participants = participants;
                 quiz.startDate = selectedDate;
                 quiz.deadlineDate = selectedDate2;
-                quiz.questions1 = quiz.questions1;
+                quiz.questions = quiz.questions;
                 quiz.duration = durationInSeconds.round();
                 quiz.creationDate = DateTime.now();
                 quiz.creator = _dataServices.doctorUser.value.name;
@@ -269,19 +269,19 @@ class _AddQuizState extends State<AddQuiz> {
                           ),
                           trailing: const Icon(Icons.keyboard_arrow_right,
                               size: 30.0),
-                          tileColor: quiz.questions1!
+                          tileColor: quiz.questions!
                                   .where((element) => element == question)
                                   .isNotEmpty
                               ? Colors.blueAccent
                               : Colors.white,
                           onTap: () {
                             setState(() {
-                              if (quiz.questions1!
+                              if (quiz.questions!
                                   .where((element) => element == question)
                                   .isNotEmpty) {
-                                quiz.questions1!.remove(question);
+                                quiz.questions!.remove(question);
                               } else {
-                                quiz.questions1!.add(question);
+                                quiz.questions!.add(question);
                               }
                             });
                           },

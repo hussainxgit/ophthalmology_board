@@ -54,7 +54,7 @@ class _QuestionViewState extends State<QuestionView> {
                 ),
                 ListView.builder(
                     shrinkWrap: true,
-                    itemCount: widget.question.choices1!.length,
+                    itemCount: widget.question.choices!.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         tileColor: selectedAnswer == index
@@ -73,7 +73,7 @@ class _QuestionViewState extends State<QuestionView> {
                         },
                         leading: SizedBox(
                             child: Text((index + 1).toString() + ' -')),
-                        title: Text(widget.question.choices1![index].choice),
+                        title: Text(widget.question.choices![index].choice),
                       );
                     }),
               ],
