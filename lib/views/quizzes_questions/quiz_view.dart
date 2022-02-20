@@ -38,8 +38,8 @@ class _QuizViewState extends State<QuizView> {
     durationInMinutes = (durationInSeconds / 60).round();
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(
-            '${_dataServices.quizQuestions.length}/${chosenAnswers.length} answered')),
+        title: Text(
+            '${widget.quiz.questions!.length}/${chosenAnswers.length} answered'),
         actions: [
           Center(
             child: Padding(
@@ -81,7 +81,6 @@ class _QuizViewState extends State<QuizView> {
                       chooseAnswer: chooseAnswer,
                       clearAnswer: clearAnswer);
                 }),
-            const Divider(),
             const SizedBox(
               height: 30.0,
             ),
@@ -150,12 +149,14 @@ class _QuizViewState extends State<QuizView> {
 
   Future<void> quizFinish(BuildContext context) async {
     for (var e in chosenAnswers) {
-      for(var k in e.values ){
-        if(k['isAnswer'] == true){
+      for (var k in e.values) {
+        if (k['isAnswer'] == true) {
           score++;
         }
       }
     }
+    print(score);
+    score=0;
     _apiServices
         .addQuizResult(QuizResult(
             doctorUid: _dataServices.doctorUser.value.uid,
