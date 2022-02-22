@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
-import 'package:get/state_manager.dart';
 import 'package:ophthalmology_board/models/quiz.dart';
 import 'package:ophthalmology_board/services/api_services.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
@@ -52,7 +51,7 @@ class _QuizViewState extends State<QuizView> {
                   return Text(
                     time < 60
                         ? time.toString() + 's'
-                        : durationInMinutes.toString() + 'm',
+                        : (time / 60).round().toString()+' m',
                     style: TextStyle(
                         color: time < 60 ? Colors.redAccent : Colors.white),
                   );
@@ -156,7 +155,6 @@ class _QuizViewState extends State<QuizView> {
         }
       }
     }
-    print(score);
     _apiServices
         .addQuizResult(QuizResult(
             doctorUid: _dataServices.doctorUser.value.uid,

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:ophthalmology_board/models/doctor_user.dart';
 import 'package:ophthalmology_board/widgets/operative_logs_list.dart';
 
 class AllOperativeLogsView extends StatelessWidget {
-  const AllOperativeLogsView({Key? key}) : super(key: key);
+  final String userEmail;
+  const AllOperativeLogsView({Key? key, required this.userEmail}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: OperativeLogsList(),
+      body: OperativeLogsList(userEmail: userEmail,),
     );
   }
 }

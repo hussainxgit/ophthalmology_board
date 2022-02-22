@@ -71,8 +71,6 @@ class ResidentQuizzesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DataServices _dataServices = Get.find();
-    _dataServices
-        .getResidentsUncompletedQuizzes(_dataServices.doctorUser.value);
     return Scaffold(
         body: Obx(() => ListView.builder(
               shrinkWrap: true,

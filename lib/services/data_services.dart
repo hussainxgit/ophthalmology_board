@@ -20,10 +20,13 @@ class DataServices extends GetxController {
 
   DataServices();
 
-  Future<RxList<Operation>> getAllDoctorOperations() async {
+  Future<RxList<Operation>> getOperationsLogsByEmail(String userEmail) async {
     doctorOperations
-        .assignAll(await _apiServices.getAllOperations(doctorUser.value));
+        .assignAll(await _apiServices.getOperationsLogsByEmail(userEmail));
     print('Doctor operations: ' + doctorOperations.length.toString());
+    doctorOperations.sort((a, b) {
+      return b.operationDate!.compareTo(a.operationDate!);
+    });
     doctorOperations.refresh();
     return doctorOperations;
   }
@@ -73,7 +76,7 @@ class DataServices extends GetxController {
             doctorUser.value.containsRole('admin') != true) {
           getResidentsUncompletedQuizzes(doctorUser.value);
         }
-        getAllDoctorOperations();
+          getOperationsLogsByEmail(doctorUser.value.email!);
       }
     });
   }

@@ -69,137 +69,130 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    return Scaffold(
-      drawer: Drawer(
-        child: Padding(
-          padding: const EdgeInsets.all(0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(
-                    right: 16.0, left: 16, top: 75, bottom: 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Dr. ${_dataServices.doctorUser.value.name}',
-                      style: textTheme.headline5,
-                    ),
-                    Text(
-                      'Year: ${_dataServices.doctorUser.value.rotationYear}',
-                      style: textTheme.subtitle1,
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(
-                height: 1,
-                thickness: 1,
-              ),
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text('Home'),
-                selected: _selectedDestination == 0,
-                onTap: () {
-                  selectDestination(0);
-                  Navigator.pop(context);
-                  Future.delayed(const Duration(milliseconds: 400), () {
-                    setState(() {
-                      _pageController.jumpToPage(0);
-                    });
-                  });
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.book),
-                title: const Text('Operative logs'),
-                selected: _selectedDestination == 1,
-                onTap: () {
-                  selectDestination(1);
-                  Navigator.pop(context);
-                  Future.delayed(const Duration(milliseconds: 400), () {
-                    setState(() {
-                      _pageController.jumpToPage(1);
-                    });
-                  });
-                },
-              ),
-              _dataServices.doctorUser.value.containsRole('admin')
-                  ? ListTile(
-                      leading: const Icon(Icons.book),
-                      title: const Text('Questions'),
-                      selected: _selectedDestination == 2,
-                      onTap: () {
-                        selectDestination(2);
-                        Navigator.pop(context);
-                        Future.delayed(const Duration(milliseconds: 400), () {
-                          setState(() {
-                            _pageController.jumpToPage(2);
-                          });
-                        });
-                      },
-                    )
-                  : const SizedBox(),
-              ListTile(
-                leading: const Icon(Icons.book),
-                title: const Text('Quizzes'),
-                selected: _selectedDestination == 3,
-                onTap: () {
-                  selectDestination(3);
-                  Navigator.pop(context);
-                  Future.delayed(const Duration(milliseconds: 400), () {
-                    setState(() {
-                      _pageController.jumpToPage(3);
-                    });
-                  });
-                },
-              ),
-              _dataServices.doctorUser.value.containsRole('admin')
-                  ? ListTile(
-                      leading: const Icon(Icons.book),
-                      title: const Text("All users"),
-                      selected: _selectedDestination == 4,
-                      onTap: () {
-                        selectDestination(4);
-                        Navigator.pop(context);
-                        Future.delayed(const Duration(milliseconds: 400), () {
-                          setState(() {
-                            _pageController.jumpToPage(4);
-                          });
-                        });
-                      },
-                    )
-                  : const SizedBox(),
-              const Divider(
-                height: 1,
-                thickness: 1,
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: ListTile(
-                    leading: const Icon(Icons.logout),
-                    title: const Text('Sign out'),
-                    selected: _selectedDestination == 6,
-                    onTap: () {
-                      _dataServices.logoutUser();
-                    },
+    return SafeArea(
+      child: Scaffold(
+        drawer: Drawer(
+          child: Padding(
+            padding: const EdgeInsets.all(0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                UserAccountsDrawerHeader(
+                  currentAccountPicture: const CircleAvatar(
+                    backgroundImage: AssetImage(
+                        'graphics/user_avatar.png'),
+                  ),
+                  accountEmail: Text(_dataServices.doctorUser.value.email!),
+                  accountName: Text(
+                    _dataServices.doctorUser.value.name!.toUpperCase(),
+                    style: const TextStyle(fontSize: 24.0),
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Colors.black87,
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 30.0,
-              )
-            ],
+                ListTile(
+                  leading: const Icon(Icons.home),
+                  title: const Text('Home'),
+                  selected: _selectedDestination == 0,
+                  onTap: () {
+                    selectDestination(0);
+                    Navigator.pop(context);
+                    Future.delayed(const Duration(milliseconds: 400), () {
+                      setState(() {
+                        _pageController.jumpToPage(0);
+                      });
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.book),
+                  title: const Text('Operative logs'),
+                  selected: _selectedDestination == 1,
+                  onTap: () {
+                    selectDestination(1);
+                    Navigator.pop(context);
+                    Future.delayed(const Duration(milliseconds: 400), () {
+                      setState(() {
+                        _pageController.jumpToPage(1);
+                      });
+                    });
+                  },
+                ),
+                _dataServices.doctorUser.value.containsRole('admin')
+                    ? ListTile(
+                        leading: const Icon(Icons.book),
+                        title: const Text('Questions'),
+                        selected: _selectedDestination == 2,
+                        onTap: () {
+                          selectDestination(2);
+                          Navigator.pop(context);
+                          Future.delayed(const Duration(milliseconds: 400), () {
+                            setState(() {
+                              _pageController.jumpToPage(2);
+                            });
+                          });
+                        },
+                      )
+                    : const SizedBox(),
+                ListTile(
+                  leading: const Icon(Icons.book),
+                  title: const Text('Quizzes'),
+                  selected: _selectedDestination == 3,
+                  onTap: () {
+                    selectDestination(3);
+                    Navigator.pop(context);
+                    Future.delayed(const Duration(milliseconds: 400), () {
+                      setState(() {
+                        _pageController.jumpToPage(3);
+                      });
+                    });
+                  },
+                ),
+                _dataServices.doctorUser.value.containsRole('admin')
+                    ? ListTile(
+                        leading: const Icon(Icons.book),
+                        title: const Text("All users"),
+                        selected: _selectedDestination == 4,
+                        onTap: () {
+                          selectDestination(4);
+                          Navigator.pop(context);
+                          Future.delayed(const Duration(milliseconds: 400), () {
+                            setState(() {
+                              _pageController.jumpToPage(4);
+                            });
+                          });
+                        },
+                      )
+                    : const SizedBox(),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: ListTile(
+                      leading: const Icon(Icons.logout),
+                      title: const Text('Sign out'),
+                      selected: _selectedDestination == 6,
+                      onTap: () {
+                        _dataServices.logoutUser();
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30.0,
+                )
+              ],
+            ),
           ),
         ),
-      ),
-      appBar: CustomAppBar(
-        actionList: [appBarActions[_selectedDestination]],
-      ),
-      body: SafeArea(
-        child: PageView(
+        appBar: CustomAppBar(
+          actionList: [appBarActions[_selectedDestination]],
+        ),
+        body: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
           onPageChanged: onPageChanged,
@@ -242,7 +235,9 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
             ),
-            const AllOperativeLogsView(),
+            AllOperativeLogsView(
+              userEmail: _dataServices.doctorUser.value.email!,
+            ),
             AllQuestionsView(),
             QuizzesListViewController(),
             const AllUsersView()

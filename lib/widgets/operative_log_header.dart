@@ -34,8 +34,8 @@ class OperativeLogHeader extends StatelessWidget {
                   _dataServices.doctorOperations.length.toString(),
                   style: Theme.of(context).textTheme.headline1,
                 )),
-            Image.network(
-                'https://cdn-icons-png.flaticon.com/512/3034/3034882.png',
+            Image.asset(
+                'graphics/home_logo.png',
                 width: 120)
           ],
         ),
@@ -56,18 +56,6 @@ class OperativeLogHeader extends StatelessWidget {
                           ' successful',
                       style: Theme.of(context).textTheme.subtitle2,
                     )),
-              ],
-            ),
-            Row(
-              children: [
-                const Icon(Icons.announcement_outlined),
-                const SizedBox(
-                  width: 8.0,
-                ),
-                Text(
-                  "0 complications",
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
               ],
             ),
           ],

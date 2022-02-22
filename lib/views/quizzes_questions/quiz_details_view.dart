@@ -28,6 +28,7 @@ class _QuizDetailsViewState extends State<QuizDetailsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black87,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),

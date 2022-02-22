@@ -49,22 +49,23 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
             tooltip: 'Send',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
+                Operation operation = Operation(
+                    patientName: nameController.value.text,
+                    patientFileNumber: fileNumberController.value.text,
+                    procedure: procedureController.value.text,
+                    leftEye: leftEyeController.value.text,
+                    rightEye: rightEyeController.value.text,
+                    postOpLeftEye: postOpLtController.value.text,
+                    postOpRightEye: postOpRtController.value.text,
+                    complications: complicationsController.value.text,
+                    operationDate: selectedDate,
+                    doctorUser: DoctorUser(
+                        name: 'Hussain SK',
+                        email: 'robinx5.q8@gmail.com',
+                        phone: '62228494'));
                 _apiServices
-                    .addOperationLog(Operation(
-                        patientName: nameController.value.text,
-                        patientFileNumber: fileNumberController.value.text,
-                        procedure: procedureController.value.text,
-                        leftEye: leftEyeController.value.text,
-                        rightEye: rightEyeController.value.text,
-                        postOpLeftEye: postOpLtController.value.text,
-                        postOpRightEye: postOpRtController.value.text,
-                        complications: complicationsController.value.text,
-                        operationDate: selectedDate,
-                        doctorUser: DoctorUser(
-                            name: 'Hussain SK',
-                            email: 'robinx5.q8@gmail.com',
-                            phone: '62228494')))
-                    .whenComplete(() => _dataServices.initAppMainData())
+                    .addOperationLog(operation)
+                    .whenComplete(() => _dataServices.doctorOperations.add(operation))
                     .whenComplete(() => Get.back());
               }
             },
@@ -276,5 +277,20 @@ class _AddSurgicalLogState extends State<AddSurgicalLog> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    dateCtl.dispose();
+    nameController.dispose();
+    fileNumberController.dispose();
+    procedureController.dispose();
+    leftEyeController.dispose();
+    rightEyeController.dispose();
+    postOpLtController.dispose();
+    postOpRtController.dispose();
+    complicationsController.dispose();
   }
 }

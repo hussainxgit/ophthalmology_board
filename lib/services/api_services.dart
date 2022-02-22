@@ -50,18 +50,14 @@ class ApiServices {
             document.data() as Map<String, dynamic>, document.id));
   }
 
-  Future<List<Operation>> getAllOperations(DoctorUser doctor) async {
+  Future<List<Operation>> getOperationsLogsByEmail(String email) async {
     List<Operation> operations = await _operationsLogCollection.get().then(
         (collection) => collection.docs
             .map((document) => Operation.fromFirebaseMap(
                 document.data() as Map<String, dynamic>, document.id))
             .toList()
-            .where((e) => e.doctorUser?.email == doctor.email)
+            .where((e) => e.doctorUser?.email == email)
             .toList());
-
-    operations.sort((a, b) {
-      return b.operationDate!.compareTo(a.operationDate!);
-    });
     return operations;
   }
 

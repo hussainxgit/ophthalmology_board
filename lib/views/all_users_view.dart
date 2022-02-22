@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:ophthalmology_board/services/data_services.dart';
-import 'package:ophthalmology_board/views/auth/sign_up_view.dart';
+import 'package:ophthalmology_board/views/user_view.dart';
 
 class AllUsersView extends StatefulWidget {
   const AllUsersView({Key? key}) : super(key: key);
@@ -21,17 +21,13 @@ class _AllUsersViewState extends State<AllUsersView> {
           itemCount: _dataServices.allUsers.length,
           itemBuilder: (context, index) {
             return ListTile(
-              onTap: () {},
-              title: Text(_dataServices.allUsers[index].name ?? 'Null'),
-              subtitle: Text(_dataServices.allUsers[index].roles.toString()),
+              onTap: () {
+                Get.to(() => UserView(user: _dataServices.allUsers[index]));
+              },
+              title: Text(_dataServices.allUsers[index].name!.toUpperCase()),
+              subtitle: Text(_dataServices.allUsers[index].roles!.first.toUpperCase()),
             );
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(() => SignupPage());
-        },
-        child: const Text('Add'),
-      ),
     );
   }
 }

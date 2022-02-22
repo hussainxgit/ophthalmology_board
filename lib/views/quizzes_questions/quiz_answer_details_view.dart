@@ -10,6 +10,7 @@ class QuizAnswerDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.black87,
           centerTitle: true,
           title: const Text('Under development !'),
         ),
@@ -44,7 +45,7 @@ class QuizAnswerDetailsView extends StatelessWidget {
                 }),
             const Center(
                 child: Text(
-                    'please give hussain A kinder, and he will finish this page soon')),
+                    'This page still under development')),
           ],
         ));
   }
