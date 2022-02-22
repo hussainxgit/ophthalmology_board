@@ -26,7 +26,6 @@ class AdminQuizzesListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _dataServices.getAllQuizzes();
     return Scaffold(
         body: Obx(() => ListView.builder(
               shrinkWrap: true,

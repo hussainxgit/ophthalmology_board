@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ophthalmology_board/models/doctor_user.dart';
 import 'package:ophthalmology_board/widgets/operative_logs_list.dart';
 
 class AllOperativeLogsView extends StatelessWidget {

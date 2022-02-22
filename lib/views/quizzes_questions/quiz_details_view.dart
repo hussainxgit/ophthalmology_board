@@ -68,7 +68,9 @@ class _QuizDetailsViewState extends State<QuizDetailsView> {
                       null) {
                     Get.to(() => QuizAnswerDetailsView(
                         quizResult:
-                            _dataServices.quizParticipants[index].quizResult!));
+                            _dataServices.quizParticipants[index].quizResult!,
+                        user: _dataServices.quizParticipants[index],
+                    ));
                   }
                 },
               );

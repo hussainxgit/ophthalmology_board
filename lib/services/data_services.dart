@@ -23,7 +23,6 @@ class DataServices extends GetxController {
   Future<RxList<Operation>> getOperationsLogsByEmail(String userEmail) async {
     doctorOperations
         .assignAll(await _apiServices.getOperationsLogsByEmail(userEmail));
-    print('Doctor operations: ' + doctorOperations.length.toString());
     doctorOperations.sort((a, b) {
       return b.operationDate!.compareTo(a.operationDate!);
     });
@@ -158,9 +157,7 @@ class DataServices extends GetxController {
       for (var e in quizResults) {
         if (e.doctorUid == quizParticipants[i].uid) {
           quizParticipants[i].quizResult = e;
-          print(quizParticipants[i].quizResult!.score);
         } else {
-          print('not found what');
         }
       }
     }

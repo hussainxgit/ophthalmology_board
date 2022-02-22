@@ -114,7 +114,9 @@ class _AddQuestionState extends State<AddQuestion> {
                           if (choicesController.text.isNotEmpty) {
                             question.choices!.add(Choice(
                                 choice: choicesController.text,
-                                isAnswer: false));
+                                isAnswer: false,
+                                isChosen: false
+                            ));
                           }
                         });
                       },

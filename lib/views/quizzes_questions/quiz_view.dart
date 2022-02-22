@@ -51,7 +51,7 @@ class _QuizViewState extends State<QuizView> {
                   return Text(
                     time < 60
                         ? time.toString() + 's'
-                        : (time / 60).round().toString()+' m',
+                        : (time / 60).round().toString() + ' m',
                     style: TextStyle(
                         color: time < 60 ? Colors.redAccent : Colors.white),
                   );
@@ -76,10 +76,7 @@ class _QuizViewState extends State<QuizView> {
                 physics: const ScrollPhysics(),
                 itemCount: widget.quiz.questions!.length,
                 itemBuilder: (BuildContext context, index) {
-                  return QuizQuestion(
-                      question: widget.quiz.questions![index],
-                      chooseAnswer: chooseAnswer,
-                      clearAnswer: clearAnswer);
+                  return QuizQuestion(question: widget.quiz.questions![index]);
                 }),
             const SizedBox(
               height: 30.0,
@@ -129,39 +126,22 @@ class _QuizViewState extends State<QuizView> {
     );
   }
 
-  void chooseAnswer(String questionUid, Choice answer) {
-    Map<String, dynamic> data = {questionUid: answer.toMap()};
-    setState(() {
-      if (chosenAnswers.isNotEmpty) {
-        chosenAnswers.removeWhere((element) => element[questionUid] != null);
-      }
-      chosenAnswers.add(data);
-    });
-    print(chosenAnswers);
-  }
-
-  void clearAnswer(String questionUid, Choice answer) {
-    setState(() {
-      chosenAnswers.removeWhere((element) => element[questionUid] != null);
-    });
-    print(chosenAnswers);
-  }
-
   Future<void> quizFinish(BuildContext context) async {
-    for (var e in chosenAnswers) {
-      for (var k in e.values) {
-        if (k['isAnswer'] == true) {
+    widget.quiz.questions!.forEach((element) {
+      element.choices!.forEach((element) {
+        if (element.isChosen && element.isAnswer) {
           score++;
         }
-      }
-    }
+      });
+    });
+    print(score.toString());
     _apiServices
         .addQuizResult(QuizResult(
             doctorUid: _dataServices.doctorUser.value.uid,
             quizUid: widget.quiz.uid,
             duration: quizDurationResult,
             score: score,
-            chosenAnswers: chosenAnswers))
+            chosenAnswers: widget.quiz.questions))
         .whenComplete(() => _dataServices
             .removeFromLocalQuiz(widget.quiz)
             .whenComplete(() => showQuizScore(context, score)));

@@ -181,7 +181,7 @@ class _LoginViewState extends State<LoginView> {
                       padding: const EdgeInsets.only(bottom: 30.0),
                       child: GestureDetector(
                         onTap: () {
-                          Get.to(() => SignupPage());
+                          Get.to(() => const SignupPage());
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

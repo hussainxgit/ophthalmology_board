@@ -59,7 +59,7 @@ class Quiz {
 class QuizResult {
   String? uid, doctorUid, quizUid;
   int? duration, score;
-  List<Map<String, dynamic>>? chosenAnswers = [];
+  List<Question>? chosenAnswers = [];
   Timestamp? documentDate;
 
   QuizResult({
@@ -78,7 +78,7 @@ class QuizResult {
       'quizUid': quizUid,
       'duration': duration,
       'score': score,
-      'chosenAnswers': chosenAnswers,
+      'chosenAnswers': chosenAnswers!.map((e) => e.toMap2()).toList(),
     };
   }
 
@@ -90,7 +90,7 @@ class QuizResult {
       duration: map['duration'] as int,
       score: map['score'] as int,
       chosenAnswers: (map['chosenAnswers'] as List<dynamic>)
-          .map<Map<String, dynamic>>((e) => e)
+          .map((e) => Question.fromMap2(e))
           .toList(),
       // documentDate: map['documentDate'] as Timestamp,
     );
@@ -155,13 +155,15 @@ class Question {
 class Choice {
   String choice;
   bool isAnswer;
+  bool isChosen;
 
-  Choice({required this.choice, required this.isAnswer});
+  Choice({required this.choice, required this.isAnswer, required this.isChosen});
 
   Map<String, dynamic> toMap() {
     return {
       'choice': choice,
       'isAnswer': isAnswer,
+      'isChosen': isChosen,
     };
   }
 
@@ -169,6 +171,7 @@ class Choice {
     return Choice(
       choice: map['choice'] as String,
       isAnswer: map['isAnswer'] as bool,
+      isChosen: map['isChosen'] as bool,
     );
   }
 }

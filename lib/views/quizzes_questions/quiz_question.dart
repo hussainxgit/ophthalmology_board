@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:ophthalmology_board/models/quiz.dart';
 
 class QuizQuestion extends StatefulWidget {
-  final Function chooseAnswer;
-  final Function clearAnswer;
+
   final Question question;
 
   const QuizQuestion(
       {Key? key,
-      required this.question,
-      required this.chooseAnswer,
-      required this.clearAnswer})
+      required this.question,})
       : super(key: key);
 
   @override
@@ -48,24 +45,27 @@ class _QuizQuestionState extends State<QuizQuestion> {
                   return ListTile(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
-                      side: BorderSide(color: selectedAnswer == index ? Colors.blue : Colors.black45),
+                      side: BorderSide(color: widget.question.choices![index].isChosen ? Colors.blue : Colors.black45),
                     ),
                     onTap: () {
-                      if (selectedAnswer == index) {
+                      if (widget.question.choices![index].isChosen) {
                         setState(() {
-                          widget.clearAnswer(widget.question.uid,widget.question.choices![index]);
-                          selectedAnswer = null;
+                          widget.question.choices!.forEach((element) {
+                            element.isChosen = false;
+                          });
+                          widget.question.choices![index].isChosen = false;
                         });
                       } else {
                         setState(() {
-                          widget.chooseAnswer(widget.question.uid,
-                              widget.question.choices![index]);
-                          selectedAnswer = index;
+                          widget.question.choices!.forEach((element) {
+                            element.isChosen = false;
+                          });
+                          widget.question.choices![index].isChosen = true;
                         });
                       }
                     },
                     title: Text(widget.question.choices![index].choice),
-                    trailing: selectedAnswer == index ? const Icon(Icons.done, color: Colors.blue,) : const Icon(Icons.circle_outlined),
+                    trailing: widget.question.choices![index].isChosen ? const Icon(Icons.done, color: Colors.blue,) : const Icon(Icons.circle_outlined),
 
                   );
                 }),

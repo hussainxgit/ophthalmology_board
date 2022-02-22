@@ -138,7 +138,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         padding: const EdgeInsets.only(bottom: 30.0),
                         child: GestureDetector(
                           onTap: () {
-                            Get.to(() => SignupPage());
+                            Get.to(() => const SignupPage());
                           },
                           child: GestureDetector(
                             onTap: () {
